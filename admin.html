@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Byte Cart</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .admin-header { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 2rem; }
+    .admin-grid { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 2rem; align-items: start; }
+    .admin-panel { background: white; border: 1px solid #e5e7eb; border-radius: .5rem; padding: 1.5rem; }
+    .admin-table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    .admin-table th, .admin-table td { padding: .75rem; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+    .admin-table th { color: #475569; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+    .table-scroll { overflow-x: auto; }
+    .admin-product-image { width: 48px; height: 48px; object-fit: cover; border-radius: .25rem; background: #f1f5f9; }
+    @media (max-width: 800px) { .admin-grid { grid-template-columns: 1fr; } .admin-header { align-items: start; flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar"><div class="navbar-container">
+    <a href="index.html" class="logo"><img src="assets/shopping cart image.png" alt="Byte Cart logo"><span class="logo-byte">Byte</span><span class="logo-cart">Cart</span></a>
+    <div class="nav-right"><a href="index.html">Storefront</a><button class="btn btn-secondary" onclick="handleLogout()">Logout</button></div>
+  </div></nav>
+
+  <main class="container">
+    <div class="admin-header"><div><p class="product-category">Operations</p><h1>Administration Dashboard</h1></div><span id="adminIdentity" class="product-sales"></span></div>
+    <div id="accessDenied" class="admin-panel" hidden></div>
+    <div id="adminContent" hidden>
+      <section class="admin-grid">
+        <form id="productForm" class="admin-panel">
+          <h2 id="productFormTitle">Add Product</h2>
+          <input type="hidden" id="productId">
+          <div class="form-group"><label class="form-label" for="productName">Product Name</label><input id="productName" class="form-control" required></div>
+          <div class="form-group"><label class="form-label" for="productImage">Image URL</label><input id="productImage" class="form-control" type="url" placeholder="https://..."></div>
+          <div class="form-group"><label class="form-label" for="productPrice">Price (PHP)</label><input id="productPrice" class="form-control" type="number" min="0" step=".01" required></div>
+          <div class="form-group"><label class="form-label" for="productStock">Stock</label><input id="productStock" class="form-control" type="number" min="0" required></div>
+          <div class="form-group"><label class="form-label" for="productDescription">Description</label><textarea id="productDescription" class="form-control" rows="4" required></textarea></div>
+          <button class="btn btn-primary" type="submit">Save Product</button> <button class="btn btn-secondary" type="button" onclick="resetProductForm()">Cancel</button>
+        </form>
+        <section class="admin-panel"><h2>Product Inventory</h2><div class="table-scroll"><table class="admin-table"><thead><tr><th>Product</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productRows"></tbody></table></div></section>
+      </section>
+      <section class="admin-panel" style="margin-top: 2rem"><h2>Global Sales &amp; Transaction History</h2><div class="table-scroll"><table class="admin-table"><thead><tr><th>Order ID</th><th>Buyer Account</th><th>Product</th><th>Quantity</th><th>Total Price</th><th>Date/Time</th><th>Status</th></tr></thead><tbody id="transactionRows"></tbody></table></div></section>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About Byte Cart</h3>
+        <p>ByteCart is a free, non-commercial prototype created for educational and portfolio demonstration purposes. No real transactions are processed.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <a href="#">Shop</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-section">
+        <h3>Customer Support</h3>
+        <a href="#">Help Center</a>
+        <a href="#">Returns</a>
+        <a href="#">Shipping Info</a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2027 [Your Company Name]. All rights reserved.</p></div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase.js"></script><script src="js/database.js"></script><script src="data/products.js"></script><script src="js/auth.js"></script><script src="js/cart.js"></script><script src="js/app.js"></script>
+  <script>
+    const peso = value => `₱${Number(value).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const fallbackImage = "assets/default-tech-placeholder.svg";
+    function renderAdmin() {
+      const products = database.getProducts();
+      document.getElementById("productRows").innerHTML = products.map(product => `
+        <tr><td><div style="display:flex;gap:.75rem;align-items:center"><img class="admin-product-image" src="${product.image_url || fallbackImage}" alt=""><span>${product.name}</span></div></td><td>${peso(product.price_php || product.price)}</td><td>${product.stock}</td><td>${product.active === false ? "Inactive" : "Active"}</td><td><button class="btn btn-secondary" onclick="editProduct(${product.id})">Edit</button> <button class="btn" style="color:#dc2626" onclick="deleteProduct(${product.id})">Delete</button></td></tr>
+      `).join("") || '<tr><td colspan="5">No products found.</td></tr>';
+      const users = database.read("users");
+      document.getElementById("transactionRows").innerHTML = database.getTransactions().slice().reverse().map(transaction => {
+        const user = users.find(row => row.id === transaction.user_id);
+        return `<tr><td>#${transaction.id}</td><td>${user ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email : "Unknown"}<br><small>${user ? user.email : ""}</small></td><td>${transaction.product_name || (products.find(row => row.id === transaction.product_id) || {}).name || "Unknown"}</td><td>${transaction.quantity}</td><td>${peso(transaction.price_paid)}</td><td>${new Date(transaction.transaction_date).toLocaleString()}</td><td>${transaction.status}</td></tr>`;
+      }).join("") || '<tr><td colspan="7">No transactions yet.</td></tr>';
+    }
+    function resetProductForm() { document.getElementById("productForm").reset(); document.getElementById("productId").value = ""; document.getElementById("productFormTitle").textContent = "Add Product"; }
+    function editProduct(id) { const product = database.getProducts().find(row => row.id === id); if (!product) return; document.getElementById("productId").value = product.id; document.getElementById("productName").value = product.name; document.getElementById("productImage").value = product.image_url || ""; document.getElementById("productPrice").value = product.price_php || product.price; document.getElementById("productStock").value = product.stock; document.getElementById("productDescription").value = product.description; document.getElementById("productFormTitle").textContent = "Edit Product"; window.scrollTo({ top: 0, behavior: "smooth" }); }
+    function deleteProduct(id) { if (!confirm("Delete this product?")) return; database.saveProducts(database.getProducts().filter(product => product.id !== id)); renderAdmin(); }
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!authManager.isAdmin()) { document.getElementById("accessDenied").hidden = false; document.getElementById("accessDenied").innerHTML = '<h2>Access denied</h2><p>Only administrator accounts can view this page.</p><a class="btn btn-primary" href="login.html?redirect=admin.html">Sign in as an administrator</a>'; return; }
+      document.getElementById("adminContent").hidden = false; document.getElementById("adminIdentity").textContent = authManager.getCurrentUser().email; renderAdmin();
+      document.getElementById("productForm").addEventListener("submit", event => { event.preventDefault(); const id = Number(document.getElementById("productId").value); const rows = database.getProducts(); const product = { id: id || database.nextId(rows), name: document.getElementById("productName").value.trim(), image_url: document.getElementById("productImage").value.trim() || fallbackImage, price_php: Number(document.getElementById("productPrice").value), price: Number(document.getElementById("productPrice").value), stock: Number(document.getElementById("productStock").value), description: document.getElementById("productDescription").value.trim(), category: "accessories", active: true, created_at: new Date().toISOString() }; database.saveProducts(id ? rows.map(row => row.id === id ? { ...row, ...product } : row) : [...rows, product]); resetProductForm(); renderAdmin(); });
+    });
+    window.addEventListener("databaseUpdated", renderAdmin);
+  </script>
+</body>
+</html>

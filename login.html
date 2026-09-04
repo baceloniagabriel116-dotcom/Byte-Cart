@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Register - Byte Cart</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .auth-container {
+      display: block;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      min-height: 60vh;
+    }
+    
+    .auth-form {
+      padding: 2rem;
+      background: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .auth-form h2 {
+      font-size: 1.75rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #111;
+    }
+    
+    @media (max-width: 768px) {
+      .auth-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="logo"><img src="assets/shopping cart image.png" alt="Byte Cart logo"><span class="logo-byte">Byte</span><span class="logo-cart">Cart</span></a>
+      <div class="nav-center">
+        <a href="products.html">All Products</a>
+        <a href="products.html?category=electronics">Electronics</a>
+        <a href="products.html?category=wearables">Wearables</a>
+        <a href="products.html?category=accessories">Accessories</a>
+      </div>
+      <div class="nav-right">
+        <a href="cart.html" class="cart-icon">
+          🛒
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Auth Section -->
+  <div class="container" style="padding: 3rem 1rem;">
+    <div class="auth-container">
+      <!-- Login Form -->
+      <div class="auth-form">
+        <h2>Login</h2>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="loginEmail" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="loginPassword" class="form-control" required>
+          </div>
+
+          <div id="loginError" class="form-error" style="margin-bottom: 1rem;"></div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Sign In</button>
+
+          <p style="text-align: center; margin-top: 1rem; color: #666;">
+            Don't have an account? <a href="#register" onclick="showAuthForm('register'); return false;" style="color: #2563eb; text-decoration: none; font-weight: 600;">Create Account</a>
+          </p>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e7eb;">
+          <p style="font-size: 0.875rem; color: #666; margin-bottom: 1rem;">Demo credentials:</p>
+          <p style="font-size: 0.875rem; color: #666;">
+            Email: <code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">demo@example.com</code><br>
+            Password: <code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">demo123</code>
+          </p>
+          <button type="button" onclick="autoFillDemo()" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Use Demo Account</button>
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div class="auth-form" id="registerForm" hidden>
+        <h2>Register</h2>
+        <form id="registerFormElement" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" id="registerFirstName" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" id="registerLastName" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="registerEmail" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="registerPassword" class="form-control" required minlength="6">
+            <small style="color: #666;">At least 6 characters</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" id="registerConfirm" class="form-control" required minlength="6">
+          </div>
+
+          <div id="registerError" class="form-error" style="margin-bottom: 1rem;"></div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Create Account</button>
+
+          <p style="text-align: center; margin-top: 1rem; color: #666;">
+            Already have an account? <a href="#login" onclick="showAuthForm('login'); return false;" style="color: #2563eb; text-decoration: none; font-weight: 600;">Already have an account?</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About Byte Cart</h3>
+        <p>ByteCart is a free, non-commercial prototype created for educational and portfolio demonstration purposes. No real transactions are processed.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <a href="#">Shop</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-section">
+        <h3>Customer Support</h3>
+        <a href="#">Help Center</a>
+        <a href="#">Returns</a>
+        <a href="#">Shipping Info</a>
+      </div>
+      <div class="footer-section">
+        <h3>Connect</h3>
+        <a href="#" aria-label="Byte Cart on Facebook"><svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.75l.4-3h-3.15V8.08c0-.87.24-1.46 1.5-1.46h1.78V3.94c-.31-.04-1.37-.14-2.6-.14-2.57 0-4.33 1.57-4.33 4.45V10H7v3h2.85v8h3.65Z"/></svg>Facebook</a>
+        <a href="#" aria-label="Byte Cart on X"><svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.963 6.817H1.684l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>X</a>
+        <a href="#" aria-label="Byte Cart on Instagram"><svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0-3-3Z"/></svg>Instagram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2027 [Your Company Name]. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/database.js"></script>
+  <script src="data/products.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function showAuthForm(form) {
+      document.querySelector('.auth-form:has(#loginForm)').hidden = form !== "login";
+      document.getElementById("registerForm").hidden = form !== "register";
+      window.location.hash = form;
+    }
+
+    // Pre-populate demo account on page load
+    function autoFillDemo() {
+      document.getElementById("loginEmail").value = "demo@example.com";
+      document.getElementById("loginPassword").value = "demo123";
+    }
+
+    // Create demo account if it doesn't exist
+    document.addEventListener("DOMContentLoaded", () => {
+      const users = authManager.getAllUsers();
+      if (!users.some(u => u.email === "demo@example.com")) {
+        authManager.register("demo@example.com", "demo123", "Demo", "User");
+        authManager.logout(); // Logout to show login form
+      }
+      if (!users.some(u => u.email === "admin@example.com")) {
+        authManager.register("admin@example.com", "admin123", "Store", "Admin");
+        const adminUsers = authManager.getAllUsers();
+        adminUsers.find(user => user.email === "admin@example.com").role = "admin";
+        authManager.saveUsers(adminUsers);
+        authManager.logout();
+      }
+      showAuthForm(window.location.hash === "#register" ? "register" : "login");
+    });
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      const errorDiv = document.getElementById("loginError");
+
+      const result = authManager.login(email, password);
+      
+      if (result.success) {
+        showNotification("Logged in successfully!", "success");
+        setTimeout(() => {
+          const params = new URLSearchParams(window.location.search);
+          const redirect = params.get("redirect") || "index.html";
+          window.location.href = redirect;
+        }, 1000);
+      } else {
+        errorDiv.textContent = result.error;
+      }
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const firstName = document.getElementById("registerFirstName").value;
+      const lastName = document.getElementById("registerLastName").value;
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+      const confirm = document.getElementById("registerConfirm").value;
+      const errorDiv = document.getElementById("registerError");
+
+      if (password !== confirm) {
+        errorDiv.textContent = "Passwords do not match";
+        return;
+      }
+
+      const result = authManager.register(email, password, firstName, lastName);
+
+      if (result.success) {
+        showNotification("Account created successfully! Logging you in...", "success");
+        setTimeout(() => {
+          const params = new URLSearchParams(window.location.search);
+          const redirect = params.get("redirect") || "index.html";
+          window.location.href = redirect;
+        }, 1500);
+      } else {
+        errorDiv.textContent = result.error;
+      }
+    }
+  </script>
+</body>
+</html>

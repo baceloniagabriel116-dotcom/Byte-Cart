@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account - Byte Cart</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      border-bottom: 2px solid #e5e7eb;
+      margin-bottom: 2rem;
+    }
+    
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+    
+    .tab-btn.active {
+      color: #2563eb;
+      border-bottom-color: #2563eb;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="logo"><img src="assets/shopping cart image.png" alt="Byte Cart logo"><span class="logo-byte">Byte</span><span class="logo-cart">Cart</span></a>
+      <div class="nav-center">
+        <a href="products.html">All Products</a>
+        <a href="products.html?category=electronics">Electronics</a>
+        <a href="products.html?category=wearables">Wearables</a>
+        <a href="products.html?category=accessories">Accessories</a>
+      </div>
+      <div class="nav-right">
+        <a href="cart.html" class="cart-icon">
+          🛒
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+        <div id="userMenu"></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Account Section -->
+  <div class="container" style="padding: 2rem 1rem; min-height: 60vh;">
+    <div id="authCheck"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About Byte Cart</h3>
+        <p>ByteCart is a free, non-commercial prototype created for educational and portfolio demonstration purposes. No real transactions are processed.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <a href="#">Shop</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-section">
+        <h3>Customer Support</h3>
+        <a href="#">Help Center</a>
+        <a href="#">Returns</a>
+        <a href="#">Shipping Info</a>
+      </div>
+      <div class="footer-section">
+        <h3>Connect</h3>
+        <a href="#" aria-label="Byte Cart on Facebook"><svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.75l.4-3h-3.15V8.08c0-.87.24-1.46 1.5-1.46h1.78V3.94c-.31-.04-1.37-.14-2.6-.14-2.57 0-4.33 1.57-4.33 4.45V10H7v3h2.85v8h3.65Z"/></svg>Facebook</a>
+        <a href="#" aria-label="Byte Cart on X"><svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.963 6.817H1.684l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>X</a>
+        <a href="#" aria-label="Byte Cart on Instagram"><svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>Instagram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2027 [Your Company Name]. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/database.js"></script>
+  <script src="data/products.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Check if user is logged in
+      if (!authManager.isLoggedIn()) {
+        document.getElementById("authCheck").innerHTML = `
+          <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 0.5rem; padding: 2rem; text-align: center;">
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Login Required</h2>
+            <p style="color: #666; margin-bottom: 2rem;">You need to be logged in to view your account.</p>
+            <a href="login.html?redirect=account.html" class="btn btn-primary">Go to Login</a>
+          </div>
+        `;
+        return;
+      }
+
+      const user = authManager.getCurrentUser();
+      const userOrders = cartManager.getUserOrders();
+
+      document.getElementById("authCheck").innerHTML = `
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 2rem;">My Account</h1>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('profile')">Profile</button>
+          <button class="tab-btn" onclick="switchTab('orders')">Order History</button>
+          <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tab-content active">
+          <div style="max-width: 600px; background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 2rem;">
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Profile Information</h2>
+            
+            <div style="margin-bottom: 1.5rem;">
+              <p style="color: #666; font-size: 0.875rem; text-transform: uppercase; margin-bottom: 0.25rem;">Email</p>
+              <p style="font-size: 1rem; font-weight: 500; color: #111;">${user.email}</p>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+              <p style="color: #666; font-size: 0.875rem; text-transform: uppercase; margin-bottom: 0.25rem;">Full Name</p>
+              <p style="font-size: 1rem; font-weight: 500; color: #111;">${user.firstName} ${user.lastName}</p>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+              <p style="color: #666; font-size: 0.875rem; text-transform: uppercase; margin-bottom: 0.25rem;">Member Since</p>
+              <p style="font-size: 1rem; font-weight: 500; color: #111;">${new Date(user.createdAt).toLocaleDateString()}</p>
+            </div>
+
+            <button onclick="editProfile()" class="btn btn-primary">Edit Profile</button>
+          </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders" class="tab-content">
+          <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Order History</h2>
+          
+          ${userOrders.length === 0 ? `
+            <div style="background: #f9fafb; border-radius: 0.5rem; padding: 2rem; text-align: center;">
+              <p style="color: #666; margin-bottom: 1rem;">You haven't placed any orders yet.</p>
+              <a href="products.html" class="btn btn-primary">Start Shopping</a>
+            </div>
+          ` : `
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: #f3f4f6;">
+                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Order #</th>
+                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Date</th>
+                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Items</th>
+                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Total</th>
+                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Status</th>
+                    <th style="padding: 1rem; text-align: left; font-weight: 600;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${userOrders.map(order => `
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                      <td style="padding: 1rem; font-weight: 600;">${order.orderNumber}</td>
+                      <td style="padding: 1rem;">${new Date(order.createdAt).toLocaleDateString()}</td>
+                      <td style="padding: 1rem;">${order.items.length} item(s)</td>
+                      <td style="padding: 1rem; font-weight: 600; color: #2563eb;">₱${order.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                      <td style="padding: 1rem;">
+                        <span style="background: ${order.status === 'pending' ? '#fef3c7' : order.status === 'shipped' ? '#dbeafe' : '#dcfce7'}; color: ${order.status === 'pending' ? '#92400e' : order.status === 'shipped' ? '#1e40af' : '#166534'}; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">
+                          ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                        </span>
+                      </td>
+                      <td style="padding: 1rem;">
+                        <button onclick="viewOrder(${order.id})" class="btn btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.875rem;">View</button>
+                      </td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+          <div style="max-width: 600px; background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 2rem;">
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Account Settings</h2>
+            
+            <div style="margin-bottom: 1.5rem;">
+              <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Notifications</h3>
+              <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
+                <input type="checkbox" checked> Email me about new products
+              </label>
+              <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
+                <input type="checkbox" checked> Order updates
+              </label>
+              <label style="display: block; cursor: pointer;">
+                <input type="checkbox" checked> Promotional offers
+              </label>
+            </div>
+
+            <div style="margin: 2rem 0; padding: 2rem 0; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;">
+              <h3 style="font-weight: 600; margin-bottom: 1rem; color: #ef4444;">Danger Zone</h3>
+              <button onclick="handleLogout()" class="btn btn-danger" style="padding: 0.75rem 1.5rem;">Logout</button>
+              <button onclick="deleteAccount()" class="btn btn-danger" style="padding: 0.75rem 1.5rem; margin-left: 1rem; opacity: 0.7;">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    function switchTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+
+      // Show selected tab
+      document.getElementById(tabName).classList.add("active");
+      event.target.classList.add("active");
+    }
+
+    function viewOrder(orderId) {
+      const order = cartManager.getOrder(orderId);
+      if (order) {
+        alert(`Order #${order.orderNumber}\n\nItems: ${order.items.length}\nTotal: ₱${order.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\nStatus: ${order.status}\n\nDelivery to:\n${order.shippingDetails.recipientName}\n${order.shippingDetails.streetAddress}\n${order.shippingDetails.city}, ${order.shippingDetails.state} ${order.shippingDetails.postalCode}`);
+      }
+    }
+
+    function editProfile() {
+      alert("Profile editing coming soon!");
+    }
+
+    function deleteAccount() {
+      if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+        alert("Account deletion not available in demo.");
+      }
+    }
+  </script>
+</body>
+</html>
