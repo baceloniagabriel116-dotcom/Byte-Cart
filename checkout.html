@@ -110,7 +110,7 @@
       const grandTotal = orderTotal + tax + shipping;
 
       document.getElementById("checkoutContent").innerHTML = `
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1000px;">
+        <div class="checkout-layout">
           <!-- Shipping Form -->
           <div>
             <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1.5rem;">Shipping Address</h2>
@@ -125,7 +125,7 @@
                 <input type="text" id="address" class="form-control" placeholder="123 Main Street" required>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="checkout-field-row">
                 <div class="form-group">
                   <label class="form-label">City</label>
                   <input type="text" id="city" class="form-control" required>
@@ -136,14 +136,14 @@
                 </div>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="checkout-field-row">
                 <div class="form-group">
                   <label class="form-label">ZIP Code</label>
                   <input type="text" id="zip" class="form-control" required>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Country</label>
-                  <input type="text" id="country" class="form-control" value="United States" required>
+                  <input type="text" id="country" class="form-control" value="Philippines" required>
                 </div>
               </div>
 
@@ -165,7 +165,7 @@
                 <input type="text" id="cardNumber" class="form-control" placeholder="4532 1234 5678 9010" maxlength="19" required>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="checkout-field-row">
                 <div class="form-group">
                   <label class="form-label">Expiry Date</label>
                   <input type="text" id="cardExpiry" class="form-control" placeholder="MM/YY" maxlength="5" required>
@@ -182,7 +182,7 @@
 
           <!-- Order Summary -->
           <div>
-            <div style="background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.5rem; position: sticky; top: 100px;">
+            <div class="checkout-summary">
               <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1.5rem;">Order Summary</h2>
               
               <div style="margin-bottom: 1.5rem; max-height: 300px; overflow-y: auto;">

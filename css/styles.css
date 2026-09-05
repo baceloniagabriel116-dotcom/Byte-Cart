@@ -430,6 +430,60 @@ body {
   margin-top: 0.25rem;
 }
 
+/* Checkout */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+}
+
+.checkout-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.checkout-summary {
+  position: sticky;
+  top: 100px;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+/* Standard phone (portrait) orientation */
+@media (max-width: 768px) and (orientation: portrait) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .checkout-summary {
+    position: static;
+    padding: 1rem;
+  }
+}
+
+/* Narrow landscape phones need the same single-column checkout layout. */
+@media (max-width: 768px) and (orientation: landscape) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-field-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
 /* Footer */
 .footer {
   background: #111;
