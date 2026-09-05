@@ -11,11 +11,39 @@ class EcommerceApp {
     });
     this.setupEventListeners();
     this.updateUI();
+    this.setupScrollAnimations();
   }
 
   setupEventListeners() {
     // Cart updates
     window.addEventListener("cartUpdated", () => this.updateCartUI());
+  }
+
+  setupScrollAnimations() {
+    if (!window.IntersectionObserver || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const revealSelector = ".hero-content, .product-card, .category-card, .footer-section, .admin-panel, .checkout-summary";
+    this.scrollObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.target.classList.toggle("is-visible", entry.isIntersecting));
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+    const revealElements = root => {
+      const elements = [];
+      if (root.nodeType === Node.ELEMENT_NODE && root.matches(revealSelector)) elements.push(root);
+      if (root.querySelectorAll) elements.push(...root.querySelectorAll(revealSelector));
+      elements.forEach((element, index) => {
+        if (element.classList.contains("reveal-on-scroll")) return;
+        element.classList.add("reveal-on-scroll");
+        element.style.setProperty("--reveal-delay", `${(index % 4) * 45}ms`);
+        this.scrollObserver.observe(element);
+      });
+    };
+
+    revealElements(document);
+    this.animationMutationObserver = new MutationObserver(records => {
+      records.forEach(record => record.addedNodes.forEach(node => revealElements(node)));
+    });
+    this.animationMutationObserver.observe(document.body, { childList: true, subtree: true });
   }
 
   updateUI() {

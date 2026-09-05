@@ -387,6 +387,67 @@ body {
   color: #999;
 }
 
+/* Scroll and touch interactions: opacity and transform only for mobile-friendly performance. */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0) scale(0.985);
+  will-change: opacity, transform;
+  transition: opacity 240ms ease-out var(--reveal-delay, 0ms), transform 280ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.btn,
+.cta-button,
+.nav-center a,
+.nav-right a,
+.product-card,
+.category-card {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .btn,
+  .cta-button,
+  .nav-center a,
+  .nav-right a,
+  .category-card {
+    transition: transform 180ms ease, opacity 180ms ease, background-color 180ms ease;
+  }
+
+  .btn:active,
+  .cta-button:active,
+  .nav-center a:active,
+  .nav-right a:active,
+  .category-card:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+
+  .product-card:active {
+    transform: scale(0.985);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Form */
 .form-group {
   margin-bottom: 1rem;
@@ -634,6 +695,9 @@ body {
   }
 
   .navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 0.5rem;
@@ -653,6 +717,10 @@ body {
   }
 
   .nav-right {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
     flex: 0 0 auto;
     gap: 0.5rem;
     white-space: nowrap;
@@ -680,7 +748,16 @@ body {
   }
 
   #authButtons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
     gap: 0.25rem;
+  }
+
+  #authButtons a {
+    padding: 0.5rem 0.35rem !important;
+    font-size: 0.875rem;
   }
 
   .nav-center {
