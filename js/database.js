@@ -33,9 +33,10 @@ class Database {
   }
 
   normalizeProduct(product) {
+    const normalizeCategory = category => String(category || "").trim().toLowerCase();
     const categories = Array.isArray(product.categories)
-      ? product.categories.filter(category => PRODUCT_CATEGORIES.includes(category))
-      : PRODUCT_CATEGORIES.includes(product.category) ? [product.category] : [];
+      ? product.categories.map(normalizeCategory).filter(category => PRODUCT_CATEGORIES.includes(category))
+      : PRODUCT_CATEGORIES.includes(normalizeCategory(product.category)) ? [normalizeCategory(product.category)] : [];
     const { category, ...productWithoutLegacyCategory } = product;
     return { ...productWithoutLegacyCategory, categories };
   }

@@ -115,7 +115,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2027 [Your Company Name]. All rights reserved.</p>
+      <p>© 2027 ByteCart. All rights reserved.</p>
     </div>
   </footer>
 
@@ -148,7 +148,7 @@
     }
 
     function filterProducts() {
-      const category = document.getElementById("categoryFilter").value;
+      const category = document.getElementById("categoryFilter").value.trim().toLowerCase();
       const priceRange = document.getElementById("priceFilter").value;
       const minimumRating = parseFloat(document.getElementById("ratingFilter").value) || 0;
 
@@ -208,7 +208,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      const requestedCategory = new URLSearchParams(window.location.search).get("category");
+      const requestedCategory = (new URLSearchParams(window.location.search).get("category") || "").trim().toLowerCase();
       if (requestedCategory && categoryLabels[requestedCategory]) {
         document.getElementById("categoryFilter").value = requestedCategory;
       }
