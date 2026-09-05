@@ -6,6 +6,8 @@ CREATE TABLE users (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TYPE product_category AS ENUM ('electronics', 'wearables', 'accessories');
+
 CREATE TABLE products (
   id INTEGER PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -13,6 +15,7 @@ CREATE TABLE products (
   price_php DECIMAL(12, 2) NOT NULL CHECK (price_php >= 0),
   description TEXT NOT NULL,
   stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
+  category product_category NOT NULL,
   active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

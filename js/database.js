@@ -1,4 +1,5 @@
 // Local-first database adapter with optional Supabase synchronization.
+const PRODUCT_CATEGORIES = Object.freeze(["electronics", "wearables", "accessories"]);
 class Database {
   constructor() {
     this.keys = {
@@ -71,7 +72,12 @@ class Database {
   }
 
   getProducts() { return this.read("products"); }
-  saveProducts(products) { return this.write("products", products); }
+  saveProducts(products) {
+    if (!products.every(product => PRODUCT_CATEGORIES.includes(product.category))) {
+      throw new Error("Every product must have a valid category.");
+    }
+    return this.write("products", products);
+  }
   getTransactions() { return this.read("transactions"); }
   getReviews() { return this.read("reviews"); }
 }

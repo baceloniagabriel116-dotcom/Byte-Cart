@@ -77,7 +77,9 @@
             <option value="">Sort by</option>
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
-            <option value="rating">Highest Rated</option>
+            <option value="newest">Newest Arrivals</option>
+            <option value="name-asc">Alphabetical: A-Z</option>
+            <option value="name-desc">Alphabetical: Z-A</option>
           </select>
         </div>
 
@@ -126,14 +128,31 @@
   <script src="js/cart.js"></script>
   <script src="js/app.js"></script>
   <script>
-    let filteredProducts = [...products];
+    const categoryLabels = {
+      electronics: "Electronics",
+      wearables: "Wearables",
+      accessories: "Accessories"
+    };
+    let filteredProducts = [];
+
+    function getCatalogProducts() {
+      return database.getProducts().filter(product => product.active !== false);
+    }
+
+    function updateCategoryContext(category) {
+      document.querySelector("main h1").textContent = category ? categoryLabels[category] : "All Products";
+      const url = new URL(window.location.href);
+      if (category) url.searchParams.set("category", category);
+      else url.searchParams.delete("category");
+      window.history.replaceState({}, "", url);
+    }
 
     function filterProducts() {
       const category = document.getElementById("categoryFilter").value;
       const priceRange = document.getElementById("priceFilter").value;
       const minimumRating = parseFloat(document.getElementById("ratingFilter").value) || 0;
 
-      filteredProducts = products.filter(p => {
+      filteredProducts = getCatalogProducts().filter(p => {
         const categoryMatch = !category || p.category === category;
         const priceMatch = !priceRange ||
           (priceRange === "under-5000" && p.price < 5000) ||
@@ -143,16 +162,23 @@
         return categoryMatch && priceMatch && ratingMatch;
       });
 
-      displayFilteredProducts();
+      applySort();
+      updateCategoryContext(category);
     }
 
     function sortProducts() {
+      filterProducts();
+    }
+
+    function applySort() {
       const sortValue = document.getElementById("sortSelect").value;
       const sorted = [...filteredProducts];
 
-      if (sortValue === "price-low") sorted.sort((a, b) => a.price - b.price);
-      else if (sortValue === "price-high") sorted.sort((a, b) => b.price - a.price);
-      else if (sortValue === "rating") sorted.sort((a, b) => b.rating - a.rating);
+      if (sortValue === "price-low") sorted.sort((a, b) => Number(a.price_php ?? a.price) - Number(b.price_php ?? b.price));
+      else if (sortValue === "price-high") sorted.sort((a, b) => Number(b.price_php ?? b.price) - Number(a.price_php ?? a.price));
+      else if (sortValue === "newest") sorted.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+      else if (sortValue === "name-asc") sorted.sort((a, b) => a.name.localeCompare(b.name));
+      else if (sortValue === "name-desc") sorted.sort((a, b) => b.name.localeCompare(a.name));
       filteredProducts = sorted;
       displayFilteredProducts();
     }
@@ -178,11 +204,19 @@
             </div>
           </div>
         </a>
-      `).join("");
+      `).join("") || '<p>No products match the selected filters.</p>';
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      displayFilteredProducts();
+      const requestedCategory = new URLSearchParams(window.location.search).get("category");
+      if (requestedCategory && categoryLabels[requestedCategory]) {
+        document.getElementById("categoryFilter").value = requestedCategory;
+      }
+      filterProducts();
+    });
+
+    window.addEventListener("databaseUpdated", event => {
+      if (event.detail.table === "products") filterProducts();
     });
   </script>
 </body>
