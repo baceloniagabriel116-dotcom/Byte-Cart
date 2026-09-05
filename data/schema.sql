@@ -15,7 +15,7 @@ CREATE TABLE products (
   price_php DECIMAL(12, 2) NOT NULL CHECK (price_php >= 0),
   description TEXT NOT NULL,
   stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
-  category product_category NOT NULL,
+  categories product_category[] NOT NULL CHECK (cardinality(categories) > 0),
   active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

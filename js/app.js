@@ -104,7 +104,7 @@ class EcommerceApp {
         <div>
           <!-- Category Badge -->
           <div style="display: inline-block;">
-            <span style="background: #f3f4f6; color: #666; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 1rem; border-radius: 0.25rem;">${product.category}</span>
+            <span style="background: #f3f4f6; color: #666; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 1rem; border-radius: 0.25rem;">${product.categories.join(", ")}</span>
           </div>
 
           <!-- Product Title -->

@@ -121,7 +121,7 @@
 
 
       // Display related products
-      const related = products.filter(p => p.category === product.category && p.id !== product.id);
+      const related = products.filter(p => p.id !== product.id && p.categories.some(category => product.categories.includes(category)));
       if (related.length > 0) {
         document.getElementById("relatedSection").style.display = "block";
         document.getElementById("relatedProducts").innerHTML = related.map(p => `
@@ -129,7 +129,7 @@
             <div class="product-card">
               <img src="${product.image_url || 'assets/default-tech-placeholder.svg'}" alt="${product.name}" class="product-image">
               <div class="product-body">
-                <p class="product-category">${p.category}</p>
+                <p class="product-category">${p.categories.join(", ")}</p>
                 <h3 class="product-name">${p.name}</h3>
                 <p class="product-description">${p.description}</p>
                 <div class="product-rating">

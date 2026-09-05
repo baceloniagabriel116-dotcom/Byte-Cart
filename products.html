@@ -153,7 +153,7 @@
       const minimumRating = parseFloat(document.getElementById("ratingFilter").value) || 0;
 
       filteredProducts = getCatalogProducts().filter(p => {
-        const categoryMatch = !category || p.category === category;
+        const categoryMatch = !category || p.categories.includes(category);
         const priceMatch = !priceRange ||
           (priceRange === "under-5000" && p.price < 5000) ||
           (priceRange === "5000-15000" && p.price >= 5000 && p.price <= 15000) ||
@@ -190,7 +190,7 @@
           <div class="product-card">
             <img src="${product.image_url || 'assets/default-tech-placeholder.svg'}" alt="${product.name}" class="product-image">
             <div class="product-body">
-              <p class="product-category">${product.category}</p>
+              <p class="product-category">${product.categories.join(", ")}</p>
               <h3 class="product-name">${product.name}</h3>
               <p class="product-description">${product.description}</p>
               <div class="product-rating">

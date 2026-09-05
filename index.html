@@ -119,7 +119,7 @@
           <div class="product-card">
             <img src="${product.image_url || 'assets/default-tech-placeholder.svg'}" alt="${product.name}" class="product-image">
             <div class="product-body">
-              <p class="product-category">${product.category}</p>
+              <p class="product-category">${product.categories.join(", ")}</p>
               <h3 class="product-name">${product.name}</h3>
               <p class="product-description">${product.description}</p>
               <div class="product-rating">

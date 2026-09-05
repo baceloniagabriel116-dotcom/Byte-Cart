@@ -32,14 +32,22 @@ class Database {
     return rows.reduce((highest, row) => Math.max(highest, Number(row.id) || 0), 0) + 1;
   }
 
+  normalizeProduct(product) {
+    const categories = Array.isArray(product.categories)
+      ? product.categories.filter(category => PRODUCT_CATEGORIES.includes(category))
+      : PRODUCT_CATEGORIES.includes(product.category) ? [product.category] : [];
+    const { category, ...productWithoutLegacyCategory } = product;
+    return { ...productWithoutLegacyCategory, categories };
+  }
+
   syncProducts(seedProducts) {
     const stored = this.read("products");
     if (stored.length) {
       this.pull("products");
-      return stored;
+      return stored.map(product => this.normalizeProduct(product));
     }
 
-    const seeded = seedProducts.map(product => ({
+    const seeded = seedProducts.map(product => this.normalizeProduct({
       ...product,
       price_php: product.price,
       active: true,
@@ -71,12 +79,13 @@ class Database {
     if (error) console.warn(`Supabase ${table} save failed:`, error.message);
   }
 
-  getProducts() { return this.read("products"); }
+  getProducts() { return this.read("products").map(product => this.normalizeProduct(product)); }
   saveProducts(products) {
-    if (!products.every(product => PRODUCT_CATEGORIES.includes(product.category))) {
-      throw new Error("Every product must have a valid category.");
+    const normalizedProducts = products.map(product => this.normalizeProduct(product));
+    if (!normalizedProducts.every(product => product.categories.length > 0)) {
+      throw new Error("Every product must have at least one valid category.");
     }
-    return this.write("products", products);
+    return this.write("products", normalizedProducts);
   }
   getTransactions() { return this.read("transactions"); }
   getReviews() { return this.read("reviews"); }

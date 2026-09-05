@@ -247,7 +247,7 @@ Edit `data/products.js`:
 {
   id: 9,
   name: "Your Product",
-  category: "electronics",
+  categories: ["electronics"],
   price: 99.99,
   image: "image-url.jpg",
   ...
