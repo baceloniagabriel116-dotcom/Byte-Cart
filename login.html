@@ -6,35 +6,86 @@
   <title>Login & Register - Byte Cart</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
+    /* ===== Auth card with tab bar ===== */
     .auth-container {
-      display: block;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      max-width: 1000px;
+      max-width: 440px;
       margin: 0 auto;
       min-height: 60vh;
     }
-    
+
+    .auth-card {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    /* Tab bar: active = dark, inactive = soft gray */
+    .tab-bar {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      background: #f3f4f6;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: #6b7280;
+      transition: background-color 1s ease-in-out, color 1s ease-in-out;
+    }
+
+    .tab-btn.is-active {
+      background: #111827;
+      color: #ffffff;
+    }
+
     .auth-form {
       padding: 2rem;
-      background: white;
-      border-radius: 0.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
-    
+
     .auth-form h2 {
       font-size: 1.75rem;
       font-weight: bold;
       margin-bottom: 1.5rem;
       color: #111;
     }
-    
+
+    /* Slow, smooth cross-fade + vertical slide between panels (key detail) */
+    .auth-panel {
+      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    }
+
+    .auth-panel.is-hidden {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .auth-panel.is-entering {
+      display: block;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .auth-panel.is-visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     @media (max-width: 768px) {
-      .auth-container {
-        grid-template-columns: 1fr;
+      .auth-form {
+        padding: 1.5rem;
       }
     }
   </style>
+  <link rel="stylesheet" href="css/transitions.css">
 </head>
 <body>
   <!-- Navbar -->
@@ -58,9 +109,15 @@
 
   <!-- Auth Section -->
   <div class="container" style="padding: 3rem 1rem;">
-    <div class="auth-container">
+    <div class="auth-card">
+      <!-- Tab bar -->
+      <div class="tab-bar" role="tablist" aria-label="Authentication">
+        <button type="button" class="tab-btn is-active" id="tabLogin" role="tab" aria-selected="true" onclick="showAuthForm('login')">Login</button>
+        <button type="button" class="tab-btn" id="tabRegister" role="tab" aria-selected="false" onclick="showAuthForm('register')">Register</button>
+      </div>
+
       <!-- Login Form -->
-      <div class="auth-form">
+      <div class="auth-form auth-panel is-visible" id="loginPanel">
         <h2>Login</h2>
         <form id="loginForm" onsubmit="handleLogin(event)">
           <div class="form-group">
@@ -81,6 +138,7 @@
             Don't have an account? <a href="#register" onclick="showAuthForm('register'); return false;" style="color: #2563eb; text-decoration: none; font-weight: 600;">Create Account</a>
           </p>
         </form>
+      </div>
 
         <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e7eb;">
           <p style="font-size: 0.875rem; color: #666; margin-bottom: 1rem;">Demo credentials:</p>
@@ -93,7 +151,7 @@
       </div>
 
       <!-- Register Form -->
-      <div class="auth-form" id="registerForm" hidden>
+      <div class="auth-form auth-panel is-hidden" id="registerForm" hidden>
         <h2>Register</h2>
         <form id="registerFormElement" onsubmit="handleRegister(event)">
           <div class="form-group">
@@ -172,11 +230,41 @@
   <script src="data/products.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/cart.js"></script>
+  <script src="js/transitions.js" defer></script>
   <script src="js/app.js"></script>
   <script>
+    // ===== Tab-switching with slow cross-fade + slide =====
     function showAuthForm(form) {
-      document.querySelector('.auth-form:has(#loginForm)').hidden = form !== "login";
-      document.getElementById("registerForm").hidden = form !== "register";
+      const loginPanel = document.getElementById("loginPanel");
+      const registerPanel = document.getElementById("registerForm");
+      const tabLogin = document.getElementById("tabLogin");
+      const tabRegister = document.getElementById("tabRegister");
+
+      const showLogin = form === "login";
+      const showing = showLogin ? loginPanel : registerPanel;
+      const hiding = showLogin ? registerPanel : loginPanel;
+
+      // Sync tab bar active state (dark bg / white text vs soft gray)
+      tabLogin.classList.toggle("is-active", showLogin);
+      tabLogin.setAttribute("aria-selected", showLogin);
+      tabRegister.classList.toggle("is-active", !showLogin);
+      tabRegister.setAttribute("aria-selected", !showLogin);
+
+      // Fade out the outgoing panel; display:none kicks in only after the
+      // transition finishes so the fade-out is actually visible
+      hiding.classList.remove("is-visible");
+      hiding.classList.add("is-hidden");
+      setTimeout(() => { hiding.hidden = true; }, 1000); // matches the 1s transition
+
+      // Reveal incoming: start hidden (offscreen + transparent), then animate in
+      showing.hidden = false;
+      showing.classList.remove("is-hidden");
+      showing.classList.add("is-entering");
+      // Force a reflow so the browser registers the starting state before transitioning
+      void showing.offsetWidth;
+      showing.classList.remove("is-entering");
+      showing.classList.add("is-visible");
+
       window.location.hash = form;
     }
 
@@ -210,7 +298,7 @@
       const errorDiv = document.getElementById("loginError");
 
       const result = authManager.login(email, password);
-      
+
       if (result.success) {
         showNotification("Logged in successfully!", "success");
         setTimeout(() => {
