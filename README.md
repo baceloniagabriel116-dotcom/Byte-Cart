@@ -171,13 +171,14 @@ The normalized production schema is in `data/schema.sql`. Replace the adapter me
 
 ### Supabase setup
 
-The app now includes an optional Supabase sync layer. To activate it:
+The app includes an optional Supabase sync layer. To activate it:
 
-1. Create a Supabase project and run `data/schema.sql` in the SQL Editor.
+1. In your Supabase project, open the **SQL Editor** and run the SQL from `data/schema.sql` to create the tables.
 2. Open `js/supabase.js` and set `SUPABASE_URL` and `SUPABASE_ANON_KEY` to the values from Project Settings > API.
-3. Reload the site. Product, user, transaction, and review records will sync in the background while local storage remains available as a fallback.
+3. In **Authentication > Providers**, enable **Email** provider. If you want demo accounts to work without email confirmation, turn off **Confirm email**.
+4. Reload the site. Product, user, transaction, and order records will sync in the background while localStorage remains available as a fallback.
 
-Do not place a Supabase service-role key in this site. For production authentication and secure transaction writes, migrate the current local authentication to Supabase Auth and keep the included RLS policies enabled.
+Do not place a Supabase service-role key in this site. The browser client uses only the public anon key.
 
 **Note:** Data persists between sessions until browser cache is cleared.
 
