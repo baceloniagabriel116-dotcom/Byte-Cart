@@ -80,6 +80,43 @@ class Database {
     if (error) console.warn(`Supabase ${table} save failed:`, error.message);
   }
 
+  async pullUsers() {
+    if (!isSupabaseConfigured) return;
+    const { data, error } = await supabaseClient.from("users").select("*");
+    if (error) { console.warn("Supabase users sync failed:", error.message); return; }
+    if (data && data.length) {
+      localStorage.setItem(this.keys.users, JSON.stringify(data));
+      window.dispatchEvent(new CustomEvent("databaseUpdated", { detail: { table: "users" } }));
+    }
+  }
+
+  async pullTransactions() {
+    if (!isSupabaseConfigured) return;
+    const { data, error } = await supabaseClient.from("transactions").select("*");
+    if (error) { console.warn("Supabase transactions sync failed:", error.message); return; }
+    if (data && data.length) {
+      localStorage.setItem(this.keys.transactions, JSON.stringify(data));
+      window.dispatchEvent(new CustomEvent("databaseUpdated", { detail: { table: "transactions" } }));
+    }
+  }
+
+  async pullReviews() {
+    if (!isSupabaseConfigured) return;
+    const { data, error } = await supabaseClient.from("reviews").select("*");
+    if (error) { console.warn("Supabase reviews sync failed:", error.message); return; }
+    if (data && data.length) {
+      localStorage.setItem(this.keys.reviews, JSON.stringify(data));
+      window.dispatchEvent(new CustomEvent("databaseUpdated", { detail: { table: "reviews" } }));
+    }
+  }
+
+  async syncAll() {
+    await this.pull("products");
+    await this.pullUsers();
+    await this.pullTransactions();
+    await this.pullReviews();
+  }
+
   getProducts() { return this.read("products").map(product => this.normalizeProduct(product)); }
   saveProducts(products) {
     const normalizedProducts = products.map(product => this.normalizeProduct(product));

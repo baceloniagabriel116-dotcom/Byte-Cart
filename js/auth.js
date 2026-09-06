@@ -9,7 +9,31 @@ class AuthManager {
     return user ? JSON.parse(user) : null;
   }
 
-  getAllUsers() {
+  async syncUserToSupabase(user) {
+    if (!isSupabaseConfigured) return;
+    try {
+      await supabaseClient.from("users").upsert({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role || "user",
+        createdAt: user.createdAt || user.created_at || new Date().toISOString()
+      });
+    } catch (e) {
+      console.warn("Supabase user sync failed:", e.message);
+    }
+  }
+
+  async getAllUsers() {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabaseClient.from("users").select("*");
+        if (!error && data && data.length) return data;
+      } catch (e) {
+        console.warn("Supabase fetch users failed:", e.message);
+      }
+    }
     const users = database.read("users");
     if (users.length) return users;
     const legacyUsers = JSON.parse(localStorage.getItem("users") || "[]");
@@ -34,14 +58,37 @@ class AuthManager {
     return this.currentUser !== null;
   }
 
-  register(email, password, firstName, lastName) {
+  async register(email, password, firstName, lastName) {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: { data: { firstName, lastName } }
+        });
+        if (error) return { success: false, error: error.message };
+        const user = data.user;
+        const profile = {
+          id: user.id,
+          email: user.email,
+          firstName,
+          lastName,
+          role: "user",
+          createdAt: new Date().toISOString()
+        };
+        await this.syncUserToSupabase(profile);
+        this.currentUser = { id: user.id, email, firstName, lastName, role: "user" };
+        localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
+        return { success: true, user: this.currentUser };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    }
+
     const users = this.getAllUsers();
-    
-    // Check if email already exists
     if (users.some(u => u.email === email)) {
       return { success: false, error: "Email already registered" };
     }
-
     const newUser = {
       id: database.nextId(users),
       email,
@@ -51,28 +98,43 @@ class AuthManager {
       role: "user",
       createdAt: new Date().toISOString()
     };
-
     users.push(newUser);
     this.saveUsers(users);
     this.login(email, password);
     return { success: true, user: newUser };
   }
 
-  login(email, password) {
+  async login(email, password) {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) return { success: false, error: error.message };
+        const user = data.user;
+        let profile = { id: user.id, email: user.email, firstName: "", lastName: "", role: "user" };
+        const { data: profileData } = await supabaseClient.from("users").select("*").eq("id", user.id).single();
+        if (profileData) {
+          profile = { ...profileData };
+        }
+        this.currentUser = { id: user.id, email: user.email, firstName: profile.firstName || "", lastName: profile.lastName || "", role: profile.role || "user", createdAt: profile.createdAt || profile.created_at || new Date().toISOString() };
+        localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
+        return { success: true, user: this.currentUser };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    }
     const users = this.getAllUsers();
     const user = users.find(u => u.email === email && (u.password_hash || u.password) === btoa(password));
-
-    if (!user) {
-      return { success: false, error: "Invalid email or password" };
-    }
-
+    if (!user) return { success: false, error: "Invalid email or password" };
     const { password: _, password_hash: __, ...userWithoutPassword } = user;
     this.currentUser = userWithoutPassword;
     localStorage.setItem("currentUser", JSON.stringify(userWithoutPassword));
     return { success: true, user: userWithoutPassword };
   }
 
-  logout() {
+  async logout() {
+    if (isSupabaseConfigured) {
+      try { await supabaseClient.auth.signOut(); } catch (e) { /* ignore */ }
+    }
     this.currentUser = null;
     localStorage.removeItem("currentUser");
   }

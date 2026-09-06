@@ -12,6 +12,16 @@ class EcommerceApp {
     this.setupEventListeners();
     this.updateUI();
     this.setupScrollAnimations();
+    if (isSupabaseConfigured) {
+      database.syncAll().then(() => {
+        products.forEach(product => {
+          product.rating = Number(reviewManager.getProductAverageRating(product.id)) || 0;
+          product.reviews = reviewManager.getProductReviews(product.id).length;
+        });
+        window.dispatchEvent(new CustomEvent("databaseUpdated", { detail: { table: "products" } }));
+      });
+      cartManager.syncOrdersFromSupabase();
+    }
   }
 
   setupEventListeners() {
@@ -182,7 +192,6 @@ class EcommerceApp {
 
           <!-- Buy Now Button -->
           <button onclick="buyNowProduct(${product.id}, parseInt(document.getElementById('quantity').value))" style="width: 100%; margin-top: 1rem; padding: 1rem; background: white; color: #2563eb; border: 2px solid #2563eb; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-            <span style="font-size: 1.2rem;">⚡</span>
             <span>Buy Now</span>
           </button>
 

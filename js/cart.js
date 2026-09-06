@@ -67,6 +67,25 @@ class CartManager {
     this.saveCart();
   }
 
+  async syncOrdersFromSupabase() {
+    if (!isSupabaseConfigured) return;
+    try {
+      const { data, error } = await supabaseClient.from("orders").select("*");
+      if (error || !data || !data.length) return;
+      const existing = this.getAllOrders();
+      const merged = [...existing];
+      for (const remoteOrder of data) {
+        if (!merged.some(o => o.id === remoteOrder.id)) {
+          merged.push(remoteOrder);
+        }
+      }
+      localStorage.setItem(this.ordersKey, JSON.stringify(merged));
+      window.dispatchEvent(new CustomEvent("cartUpdated", { detail: { cart: this.cart, count: this.getCartCount() } }));
+    } catch (e) {
+      console.warn("Supabase orders sync failed:", e.message);
+    }
+  }
+
   checkout(shippingDetails) {
     if (!authManager.isLoggedIn()) {
       return { success: false, error: "Please log in to checkout" };
@@ -109,13 +128,26 @@ class CartManager {
     database.saveProducts(productRows);
     database.write("transactions", transactionRows);
 
-    // Save order
     const orders = this.getAllOrders();
     salesManager.recordOrder(order);
     orders.push(order);
     localStorage.setItem(this.ordersKey, JSON.stringify(orders));
 
-    // Clear cart
+    if (isSupabaseConfigured) {
+      supabaseClient.from("orders").upsert({
+        id: order.id,
+        userId: order.userId,
+        items: order.items,
+        total: order.total,
+        shippingDetails: order.shippingDetails,
+        status: order.status,
+        createdAt: order.createdAt,
+        orderNumber: order.orderNumber
+      }).then(({ error }) => {
+        if (error) console.warn("Supabase order save failed:", error.message);
+      });
+    }
+
     this.clearCart();
 
     return { success: true, order };
