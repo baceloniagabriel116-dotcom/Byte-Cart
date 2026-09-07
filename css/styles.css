@@ -103,18 +103,25 @@ body {
   border: 1.5px solid #2563eb;
   border-radius: 999px;
   background: white;
-  transition: background-color 0.25s, box-shadow 0.25s, transform 0.15s;
+  transition: background-color 0.25s, box-shadow 0.25s, transform 0.15s, color 0.25s;
 }
 
 .nav-auth-links .nav-login-link svg {
   width: 16px;
   height: 16px;
+  stroke: currentColor;
+  transition: stroke 0.25s;
 }
 
 .nav-auth-links .nav-login-link:hover {
-  background: #eff6ff;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
-  transform: translateY(-1px);
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  transform: translateY(-2px);
+}
+
+.nav-auth-links .nav-login-link:hover svg {
+  stroke: white;
 }
 
 .nav-auth-links .nav-register-btn {
@@ -128,18 +135,25 @@ body {
   border-radius: 999px;
   font-weight: 600;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
-  transition: box-shadow 0.25s, transform 0.15s, filter 0.25s;
+  transition: box-shadow 0.25s, transform 0.15s, filter 0.25s, background 0.25s;
 }
 
 .nav-auth-links .nav-register-btn svg {
   width: 16px;
   height: 16px;
+  stroke: currentColor;
+  transition: stroke 0.25s;
 }
 
 .nav-auth-links .nav-register-btn:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+  transform: translateY(-2px);
+  color: white;
+}
+
+.nav-auth-links .nav-register-btn:hover svg {
+  stroke: white;
 }
 
 .cart-icon {
