@@ -13,13 +13,19 @@ class EcommerceApp {
     this.updateUI();
     this.setupScrollAnimations();
     if (isSupabaseConfigured) {
-      database.syncAll().then(() => {
-        products.forEach(product => {
-          product.rating = Number(reviewManager.getProductAverageRating(product.id)) || 0;
-          product.reviews = reviewManager.getProductReviews(product.id).length;
+      const syncThenRefresh = () => {
+        database.syncAll().then(() => {
+          reviewManager.reviews = reviewManager.loadReviews();
+          products.forEach(product => {
+            product.rating = Number(reviewManager.getProductAverageRating(product.id)) || 0;
+            product.reviews = reviewManager.getProductReviews(product.id).length;
+          });
+          window.dispatchEvent(new CustomEvent("databaseUpdated", { detail: { table: "products" } }));
         });
-        window.dispatchEvent(new CustomEvent("databaseUpdated", { detail: { table: "products" } }));
-      });
+      };
+      if (authManager.isLoggedIn()) {
+        syncThenRefresh();
+      }
       cartManager.syncOrdersFromSupabase();
     }
   }

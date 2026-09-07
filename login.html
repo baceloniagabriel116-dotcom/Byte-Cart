@@ -311,9 +311,13 @@
       const password = document.getElementById("loginPassword").value;
       const errorDiv = document.getElementById("loginError");
 
-      const result = authManager.login(email, password);
+      const result = await authManager.login(email, password);
 
       if (result.success) {
+        if (isSupabaseConfigured) {
+          await database.syncAll();
+          reviewManager.reviews = reviewManager.loadReviews();
+        }
         showNotification("Logged in successfully!", "success");
         setTimeout(() => {
           const params = new URLSearchParams(window.location.search);

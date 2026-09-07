@@ -227,29 +227,49 @@ class ReviewManager {
   }
 
   // Check if user has verified purchase for this product
-  canUserReview(productId) {
+  async hasRemoteVerifiedPurchase(productId) {
+    if (!isSupabaseConfigured || !authManager.isLoggedIn()) return false;
+    try {
+      const { data, error } = await supabaseClient
+        .from("transactions")
+        .select("*")
+        .eq("user_id", authManager.getCurrentUser().id)
+        .eq("product_id", productId)
+        .eq("status", "completed");
+      if (error) return false;
+      return (data && data.length) > 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async canUserReview(productId) {
     if (!authManager.isLoggedIn()) return false;
     
     const currentUser = authManager.getCurrentUser();
-    const hasVerifiedPurchase = database.getTransactions().some(transaction =>
+    const localTransactions = database.getTransactions();
+    const hasVerifiedPurchase = localTransactions.some(transaction =>
       transaction.user_id === currentUser.id && transaction.product_id === productId && transaction.status === "completed"
     );
     
-    // Check if user already reviewed this product
+    if (!hasVerifiedPurchase && isSupabaseConfigured) {
+      const remote = await this.hasRemoteVerifiedPurchase(productId);
+      if (!remote) return false;
+    }
+    
     const alreadyReviewed = this.reviews.some(
       review => review.userId === currentUser.id && review.productId === productId
     );
     
-    return hasVerifiedPurchase && !alreadyReviewed;
+    return !alreadyReviewed;
   }
 
-  // Submit a review (only for verified buyers)
-  submitReview(productId, rating, comment) {
+  async submitReview(productId, rating, comment) {
     if (!authManager.isLoggedIn()) {
       return { success: false, error: "Please log in to submit a review" };
     }
 
-    if (!this.canUserReview(productId)) {
+    if (!(await this.canUserReview(productId))) {
       return { success: false, error: "You are not eligible to review this product" };
     }
 
@@ -268,6 +288,13 @@ class ReviewManager {
 
     this.reviews.push(review);
     this.saveReviews();
+    if (isSupabaseConfigured) {
+      try {
+        await supabaseClient.from("reviews").upsert(review);
+      } catch (e) {
+        console.warn("Supabase review sync failed:", e.message);
+      }
+    }
     return { success: true, review };
   }
 

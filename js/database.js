@@ -110,11 +110,29 @@ class Database {
     }
   }
 
+  async pullOrders() {
+    if (!isSupabaseConfigured) return;
+    const { data, error } = await supabaseClient.from("orders").select("*");
+    if (error) { console.warn("Supabase orders sync failed:", error.message); return; }
+    if (data && data.length) {
+      const key = "user-orders";
+      const existing = JSON.parse(localStorage.getItem(key) || "[]");
+      const merged = [...existing];
+      for (const remoteOrder of data) {
+        if (!merged.some(o => o.id === remoteOrder.id)) {
+          merged.push(remoteOrder);
+        }
+      }
+      localStorage.setItem(key, JSON.stringify(merged));
+    }
+  }
+
   async syncAll() {
     await this.pull("products");
     await this.pullUsers();
     await this.pullTransactions();
     await this.pullReviews();
+    await this.pullOrders();
   }
 
   getProducts() { return this.read("products").map(product => this.normalizeProduct(product)); }
