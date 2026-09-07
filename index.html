@@ -65,7 +65,7 @@
       <p>Discover premium electronics, wearables, and accessories at unbeatable prices</p>
       <div class="hero-actions"
         style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem;">
-        <a href="products.html" class="cta-button" style="background:#111827;">Shop Now</a>
+        <a href="products.html" class="cta-button">Shop Now</a>
       </div>
     </div>
   </section>
@@ -165,11 +165,11 @@
               <h3 class="product-name">${product.name}</h3>
               <p class="product-description">${product.description}</p>
               <div class="product-rating">
-                <span style="color: #999;">${product.reviews > 0 ? `? ${product.rating} (${product.reviews})` : "No reviews yet"}</span>
+                 <span style="color: #999;">${product.reviews > 0 ? `★ ${product.rating} (${product.reviews})` : "No reviews yet"}</span>
               </div>
               <div class="product-price-section">
-                <span class="product-price">?${product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
-                <span class="product-sales">? ${salesManager.getSalesCount(product.id)} bought</span>
+                 <span class="product-price">₱${product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                 <span class="product-sales">✓ ${salesManager.getSalesCount(product.id)} bought</span>
               </div>
             </div>
           </div>
