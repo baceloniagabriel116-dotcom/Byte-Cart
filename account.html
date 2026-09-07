@@ -11,8 +11,8 @@
       gap: 1rem;
       border-bottom: 2px solid #e5e7eb;
       margin-bottom: 2rem;
-    }
-    
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+
     .tab-btn {
       background: none;
       border: none;
@@ -23,20 +23,20 @@
       color: #666;
       border-bottom: 3px solid transparent;
       transition: all 0.3s;
-    }
-    
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+
     .tab-btn.active {
       color: #2563eb;
       border-bottom-color: #2563eb;
-    }
-    
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+
     .tab-content {
       display: none;
-    }
-    
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+
     .tab-content.active {
       display: block;
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
   </style>
   <link rel="stylesheet" href="css/transitions.css">
 </head>
@@ -52,8 +52,8 @@
         <a href="products.html?category=accessories">Accessories</a>
       </div>
       <div class="nav-right">
-        <a href="cart.html" class="cart-icon">
-          🛒
+        <a href="cart.html" class="cart-icon" aria-label="View shopping cart">
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-count" id="cartCount">0</span>
         </a>
         <div id="userMenu"></div>
@@ -118,7 +118,7 @@
           </div>
         `;
         return;
-      }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
       const user = authManager.getCurrentUser();
       const userOrders = cartManager.getUserOrders();
@@ -136,7 +136,7 @@
         <div id="profile" class="tab-content active">
           <div style="max-width: 600px; background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 2rem;">
             <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Profile Information</h2>
-            
+
             <div style="margin-bottom: 1.5rem;">
               <p style="color: #666; font-size: 0.875rem; text-transform: uppercase; margin-bottom: 0.25rem;">Email</p>
               <p style="font-size: 1rem; font-weight: 500; color: #111;">${user.email}</p>
@@ -159,7 +159,7 @@
         <!-- Orders Tab -->
         <div id="orders" class="tab-content">
           <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Order History</h2>
-          
+
           ${userOrders.length === 0 ? `
             <div style="background: #f9fafb; border-radius: 0.5rem; padding: 2rem; text-align: center;">
               <p style="color: #666; margin-bottom: 1rem;">You haven't placed any orders yet.</p>
@@ -205,7 +205,7 @@
         <div id="settings" class="tab-content">
           <div style="max-width: 600px; background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 2rem;">
             <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Account Settings</h2>
-            
+
             <div style="margin-bottom: 1.5rem;">
               <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Notifications</h3>
               <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
@@ -237,24 +237,24 @@
       // Show selected tab
       document.getElementById(tabName).classList.add("active");
       event.target.classList.add("active");
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     function viewOrder(orderId) {
       const order = cartManager.getOrder(orderId);
       if (order) {
         alert(`Order #${order.orderNumber}\n\nItems: ${order.items.length}\nTotal: ₱${order.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\nStatus: ${order.status}\n\nDelivery to:\n${order.shippingDetails.recipientName}\n${order.shippingDetails.streetAddress}\n${order.shippingDetails.city}, ${order.shippingDetails.state} ${order.shippingDetails.postalCode}`);
-      }
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     function editProfile() {
       alert("Profile editing coming soon!");
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     function deleteAccount() {
       if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
         alert("Account deletion not available in demo.");
-      }
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
   </script>
 </body>
 </html>

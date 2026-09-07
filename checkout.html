@@ -19,8 +19,8 @@
         <a href="products.html?category=accessories">Accessories</a>
       </div>
       <div class="nav-right">
-        <a href="cart.html" class="cart-icon">
-          🛒
+        <a href="cart.html" class="cart-icon" aria-label="View shopping cart">
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-count" id="cartCount">0</span>
         </a>
         <div id="userMenu"></div>
@@ -90,7 +90,7 @@
           </div>
         `;
         return;
-      }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
       const cart = cartManager.getCart();
       if (cart.length === 0) {
@@ -103,7 +103,7 @@
           </div>
         `;
         return;
-      }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
       const user = authManager.getCurrentUser();
       const orderTotal = cartManager.getCartTotal();
@@ -155,7 +155,7 @@
               </div>
 
               <h2 style="font-size: 1.25rem; font-weight: bold; margin: 2rem 0 1.5rem;">Payment Method</h2>
-              
+
               <div class="form-group">
                 <label style="display: block; padding: 1rem; border: 2px solid #3b82f6; border-radius: 0.375rem; cursor: pointer; background: #eff6ff;">
                   <input type="radio" name="payment" value="card" checked> Credit/Debit Card
@@ -186,7 +186,7 @@
           <div>
             <div class="checkout-summary">
               <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1.5rem;">Order Summary</h2>
-              
+
               <div style="margin-bottom: 1.5rem; max-height: 300px; overflow-y: auto;">
                 ${cart.map(item => `
                   <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;">
@@ -251,8 +251,8 @@
         }, 1500);
       } else {
         showNotification(result.error, "error");
-      }
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
   </script>
 </body>
 </html>

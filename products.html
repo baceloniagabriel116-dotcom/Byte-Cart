@@ -19,8 +19,8 @@
         <a href="products.html?category=accessories">Accessories</a>
       </div>
       <div class="nav-right">
-        <a href="cart.html" class="cart-icon">
-          🛒
+        <a href="cart.html" class="cart-icon" aria-label="View shopping cart">
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-count" id="cartCount">0</span>
         </a>
         <div id="userMenu"></div>
@@ -38,7 +38,7 @@
       <!-- Sidebar Filters -->
       <aside>
         <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1.5rem;">Filters</h3>
-        
+
         <div style="margin-bottom: 2rem;">
           <h4 style="font-weight: 600; margin-bottom: 1rem;">Categories</h4>
           <select id="categoryFilter" class="filter-select" onchange="filterProducts()">
@@ -139,7 +139,7 @@
 
     function getCatalogProducts() {
       return database.getProducts().filter(product => product.active !== false);
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     function updateCategoryContext(category) {
       document.querySelector("main h1").textContent = category ? categoryLabels[category] : "All Products";
@@ -147,7 +147,7 @@
       if (category) url.searchParams.set("category", category);
       else url.searchParams.delete("category");
       window.history.replaceState({}, "", url);
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     function filterProducts() {
       const category = document.getElementById("categoryFilter").value.trim().toLowerCase();
@@ -166,11 +166,11 @@
 
       applySort();
       updateCategoryContext(category);
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     function sortProducts() {
       filterProducts();
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     function applySort() {
       const sortValue = document.getElementById("sortSelect").value;
@@ -183,7 +183,7 @@
       else if (sortValue === "name-desc") sorted.sort((a, b) => b.name.localeCompare(a.name));
       filteredProducts = sorted;
       displayFilteredProducts();
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     function displayFilteredProducts() {
       const grid = document.getElementById("productsGrid");
@@ -207,13 +207,13 @@
           </div>
         </a>
       `).join("") || '<p>No products match the selected filters.</p>';
-    }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 
     document.addEventListener("DOMContentLoaded", () => {
       const requestedCategory = (new URLSearchParams(window.location.search).get("category") || "").trim().toLowerCase();
       if (requestedCategory && categoryLabels[requestedCategory]) {
         document.getElementById("categoryFilter").value = requestedCategory;
-      }
+          <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       filterProducts();
     });
 
