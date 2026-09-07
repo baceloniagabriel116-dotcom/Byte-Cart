@@ -86,12 +86,8 @@ class EcommerceApp {
       }
       if (authButtons) authButtons.style.display = "none";
     } else {
-      if (authButtons) {
-        authButtons.innerHTML = `
-          <a href="login.html" class="px-4 py-2 text-blue-600 hover:text-blue-800">Login</a>
-          <a href="login.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Register</a>
-        `;
-      }
+      // Keep the styled markup from the HTML pages — just make sure it's visible.
+      if (authButtons) authButtons.style.display = "";
       if (userMenu) userMenu.innerHTML = "";
     }
   }
@@ -351,6 +347,21 @@ function showNotification(message, type = "info") {
   setTimeout(() => notification.remove(), 3000);
 }
 
+// Toast that survives navigation: saved in sessionStorage and
+// re-shown once on the next page, then cleared.
+function showPageTransitionToast(message, type = "success") {
+  try { sessionStorage.setItem("pendingToast", JSON.stringify({ message, type })); } catch (e) {}
+  window.addEventListener("DOMContentLoaded", () => {
+    try {
+      const data = JSON.parse(sessionStorage.getItem("pendingToast"));
+      if (data) {
+        sessionStorage.removeItem("pendingToast");
+        showNotification(data.message, data.type);
+      }
+    } catch (e) {}
+  });
+}
+
 function showLoginModal(message = "Please log in to continue") {
   const modal = document.getElementById("loginModal");
   if (modal) {
@@ -499,7 +510,7 @@ function resetRating() {
 
 function submitProductReview(event, productId) {
   event.preventDefault();
-  
+
   const form = event.target;
   const rating = form.querySelector('input[name="rating"]:checked')?.value;
   const comment = form.querySelector('textarea[name="comment"]').value;

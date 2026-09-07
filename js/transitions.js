@@ -135,13 +135,22 @@
   });
 
   /* ---------- 6. Cart icon pop when count changes ---------- */
+  // Ignore changes right after page load (cart count renders asynchronously),
+  // so the icon doesn't pop on every page switch.
   var lastCount = null;
+  var armedAt = Date.now() + 1500; // arming delay
   function watchCart() {
+    if (Date.now() < armedAt) {
+      // Keep absorbing the initial render during the arming window
+      var el0 = document.getElementById("cartCount");
+      if (el0) lastCount = el0.textContent.trim();
+      return;
+    }
     var countEl = document.getElementById("cartCount");
     var icon = document.querySelector(".cart-icon");
     if (!countEl || !icon) return;
     var text = countEl.textContent.trim();
-    if (lastCount !== null && text !== lastCount) {
+    if (lastCount !== null && text !== lastCount && Date.now() >= armedAt) {
       icon.classList.remove("pop");
       // Force reflow to restart animation
       void icon.offsetWidth;

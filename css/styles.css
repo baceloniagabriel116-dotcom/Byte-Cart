@@ -91,7 +91,7 @@ body {
   gap: 0.75rem;
 }
 
-/* Auth links in the header top-right (Sign In text + Create Account button) */
+/* Auth links in the header top-right (Login text + Register button) */
 .nav-auth-links .nav-login-link {
   display: inline-flex;
   align-items: center;
