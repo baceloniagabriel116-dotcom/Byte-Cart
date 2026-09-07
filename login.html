@@ -39,7 +39,6 @@
       cursor: pointer;
       background: transparent;
       color: #6b7280;
-      transition: background-color 1s ease-in-out, color 1s ease-in-out;
     }
 
     .tab-btn.is-active {
@@ -58,26 +57,12 @@
       color: #111;
     }
 
-    /* Slow, smooth cross-fade + vertical slide between panels (key detail) */
-    .auth-panel {
-      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-    }
-
     .auth-panel.is-hidden {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-
-    .auth-panel.is-entering {
-      display: block;
-      opacity: 0;
-      transform: translateY(16px);
+      display: none;
     }
 
     .auth-panel.is-visible {
       display: block;
-      opacity: 1;
-      transform: translateY(0);
     }
 
     @media (max-width: 768px) {
