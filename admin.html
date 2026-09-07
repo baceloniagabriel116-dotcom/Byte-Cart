@@ -17,6 +17,11 @@
     .category-checkboxes { display: grid; gap: .5rem; padding: .75rem; border: 1px solid #d1d5db; border-radius: .375rem; }
     .category-checkboxes label { display: flex; align-items: center; gap: .5rem; cursor: pointer; }
     @media (max-width: 800px) { .admin-grid { grid-template-columns: 1fr; } .admin-header { align-items: start; flex-direction: column; } }
+    .site-grid { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 2rem; align-items: start; margin-top: 2rem; }
+    .social-row, .team-edit-row { display: flex; gap: .5rem; margin-bottom: .5rem; }
+    .social-row input { flex: 1; }
+    .team-card-preview { width: 64px; height: 64px; object-fit: cover; border-radius: .375rem; background: #f1f5f9; }
+    @media (max-width: 800px) { .site-grid { grid-template-columns: 1fr; } }
   </style>
   <link rel="stylesheet" href="css/transitions.css">
 </head>
@@ -46,6 +51,43 @@
         <section class="admin-panel"><h2>Product Inventory</h2><div class="table-scroll"><table class="admin-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productRows"></tbody></table></div></section>
       </section>
       <section class="admin-panel" style="margin-top: 2rem"><h2>Global Sales &amp; Transaction History</h2><div class="table-scroll"><table class="admin-table"><thead><tr><th>Order ID</th><th>Buyer Account</th><th>Product</th><th>Quantity</th><th>Total Price</th><th>Date/Time</th><th>Status</th></tr></thead><tbody id="transactionRows"></tbody></table></div></section>
+
+      <!-- ===== Site Customization: Footer + Team ===== -->
+      <section class="site-grid">
+        <form id="footerSettingsForm" class="admin-panel">
+          <h2>Footer Settings</h2>
+          <div class="form-group"><label class="form-label" for="settingBrand">Brand Name</label><input id="settingBrand" class="form-control"></div>
+          <div class="form-group"><label class="form-label" for="settingCopyright">Copyright Text</label><input id="settingCopyright" class="form-control" required></div>
+          <button class="btn btn-primary" type="submit">Save Footer</button>
+          <span id="footerSaveStatus" style="margin-left:.75rem; font-size:.85rem; color:#059669;"></span>
+        </form>
+        <section class="admin-panel">
+          <h2>Social Media Links</h2>
+          <div id="socialLinkRows"></div>
+          <div class="social-row" style="margin-top:1rem;">
+            <input id="newSocialLabel" class="form-control" placeholder="Label (e.g. TikTok)">
+            <input id="newSocialUrl" class="form-control" placeholder="https://...">
+            <button class="btn btn-primary" type="button" onclick="addSocialLink()">Add</button>
+          </div>
+          <span id="socialSaveStatus" style="font-size:.85rem; color:#059669;"></span>
+        </section>
+      </section>
+
+      <section class="site-grid" id="teamSection">
+        <form id="teamForm" class="admin-panel">
+          <h2 id="teamFormTitle">Add Team Member</h2>
+          <input type="hidden" id="teamMemberId">
+          <div class="form-group"><label class="form-label" for="teamName">Name</label><input id="teamName" class="form-control" required></div>
+          <div class="form-group"><label class="form-label" for="teamRole">Role / Title</label><input id="teamRole" class="form-control" required></div>
+          <div class="form-group"><label class="form-label" for="teamBio">Bio / Info</label><textarea id="teamBio" class="form-control" rows="3" required></textarea></div>
+          <div class="form-group"><label class="form-label" for="teamImageUrl">Profile Picture URL</label><input id="teamImageUrl" class="form-control" placeholder="https://... or upload below"></div>
+          <div class="form-group"><label class="form-label" for="teamImageFile">…or Upload Picture</label><input id="teamImageFile" class="form-control" type="file" accept="image/*"></div>
+          <img id="teamImagePreview" class="team-card-preview" alt="" hidden>
+          <div style="margin-top:1rem;"><button class="btn btn-primary" type="submit">Save Member</button> <button class="btn btn-secondary" type="button" onclick="resetTeamForm()">Cancel</button></div>
+          <span id="teamSaveStatus" style="margin-left:.5rem; font-size:.85rem; color:#059669;"></span>
+        </form>
+        <section class="admin-panel"><h2>Team Members</h2><div class="table-scroll"><table class="admin-table"><thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Bio</th><th>Actions</th></tr></thead><tbody id="teamRows"></tbody></table></div></section>
+      </section>
     </div>
   </main>
   <footer class="footer">
@@ -67,10 +109,11 @@
         <a href="#">Shipping Info</a>
       </div>
     </div>
-    <div class="footer-bottom"><p>© 2027 ByteCart. All rights reserved.</p></div>
+    <div class="footer-bottom"><p>© 2026 ByteCart. All rights reserved.</p></div>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase.js"></script><script src="js/database.js"></script><script src="data/products.js"></script><script src="js/auth.js"></script><script src="js/cart.js"></script><script src="js/transitions.js" defer></script>
   <script src="js/app.js"></script>
+  <script src="js/site.js"></script>
   <script>
     const peso = value => `₱${Number(value).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     const fallbackImage = "assets/default-tech-placeholder.svg";
@@ -95,6 +138,134 @@
       document.getElementById("productForm").addEventListener("submit", event => { event.preventDefault(); const id = Number(document.getElementById("productId").value); const rows = database.getProducts(); const categories = getSelectedCategories(); if (!categories.length) { alert("Select at least one category."); return; } const existing = rows.find(row => row.id === id); const product = { id: id || database.nextId(rows), name: document.getElementById("productName").value.trim(), image_url: document.getElementById("productImage").value.trim() || fallbackImage, price_php: Number(document.getElementById("productPrice").value), price: Number(document.getElementById("productPrice").value), stock: Number(document.getElementById("productStock").value), description: document.getElementById("productDescription").value.trim(), categories, active: existing ? existing.active !== false : true, created_at: existing ? existing.created_at : new Date().toISOString() }; database.saveProducts(id ? rows.map(row => row.id === id ? { ...row, ...product } : row) : [...rows, product]); resetProductForm(); renderAdmin(); });
     });
     window.addEventListener("databaseUpdated", renderAdmin);
+
+    // ===== Site Customization: Footer + Team =====
+    const socialStatus = msg => { const el = document.getElementById("socialSaveStatus"); el.textContent = msg; setTimeout(() => el.textContent = "", 2500); };
+
+    async function loadSiteSettingsUI() {
+      await siteSettings.loadSettings();
+      const settings = siteSettings.getSettings();
+      document.getElementById("settingBrand").value = settings.brand_name;
+      document.getElementById("settingCopyright").value = settings.copyright_text;
+      renderSocialRows();
+      await loadTeamUI();
+    }
+
+    let socialLinks = [];
+    function renderSocialRows() {
+      socialLinks = siteSettings.getSettings().social_links || [];
+      document.getElementById("socialLinkRows").innerHTML = socialLinks.map((link, index) => `
+        <div class="social-row">
+          <input class="form-control" value="${link.label}" onchange="updateSocialLink(${index}, 'label', this.value)" placeholder="Label">
+          <input class="form-control" value="${link.url}" onchange="updateSocialLink(${index}, 'url', this.value)" placeholder="URL">
+          <button class="btn" style="color:#dc2626" type="button" onclick="removeSocialLink(${index})">Delete</button>
+        </div>`).join("") || '<p style="color:#6b7280;">No social links yet.</p>';
+    }
+    async function persistSocialLinks() {
+      const result = await siteSettings.saveSetting("social_links", socialLinks);
+      socialStatus(result.success ? "Saved ✓" : "Error: " + result.error);
+    }
+    async function updateSocialLink(index, field, value) { socialLinks[index][field] = value.trim(); await persistSocialLinks(); }
+    async function removeSocialLink(index) { socialLinks.splice(index, 1); renderSocialRows(); await persistSocialLinks(); }
+    async function addSocialLink() {
+      const label = document.getElementById("newSocialLabel").value.trim();
+      const url = document.getElementById("newSocialUrl").value.trim();
+      if (!label || !url) { alert("Enter both a label and a URL."); return; }
+      socialLinks.push({ label, url });
+      document.getElementById("newSocialLabel").value = ""; document.getElementById("newSocialUrl").value = "";
+      renderSocialRows(); await persistSocialLinks();
+    }
+
+    document.getElementById("footerSettingsForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const brand = document.getElementById("settingBrand").value.trim();
+      const copyright = document.getElementById("settingCopyright").value.trim();
+      const result = await siteSettings.saveSettings({ brand_name: brand, copyright_text: copyright });
+      const status = document.getElementById("footerSaveStatus");
+      status.textContent = result.success ? "Saved ✓" : "Error: " + result.error;
+      setTimeout(() => status.textContent = "", 2500);
+    });
+
+    // ----- Team members CRUD -----
+    let teamMembers = [];
+    async function loadTeamUI() {
+      teamMembers = await siteSettings.loadTeam();
+      renderTeamRows();
+    }
+    function renderTeamRows() {
+      document.getElementById("teamRows").innerHTML = teamMembers.map(member => `
+        <tr>
+          <td><img class="team-card-preview" src="${member.image_url || "assets/default-tech-placeholder.svg"}" alt=""></td>
+          <td>${member.name}</td><td>${member.role}</td><td>${member.bio}</td>
+          <td><button class="btn btn-secondary" onclick="editTeamMember(${member.id})">Edit</button>
+          <button class="btn" style="color:#dc2626" onclick="deleteTeamMember(${member.id})">Delete</button></td>
+        </tr>`).join("") || '<tr><td colspan="5">No team members yet.</td></tr>';
+    }
+    function resetTeamForm() {
+      document.getElementById("teamForm").reset();
+      document.getElementById("teamMemberId").value = "";
+      document.getElementById("teamFormTitle").textContent = "Add Team Member";
+      const preview = document.getElementById("teamImagePreview"); preview.hidden = true; preview.src = "";
+    }
+    function editTeamMember(id) {
+      const member = teamMembers.find(row => row.id === id); if (!member) return;
+      document.getElementById("teamMemberId").value = member.id;
+      document.getElementById("teamName").value = member.name;
+      document.getElementById("teamRole").value = member.role;
+      document.getElementById("teamBio").value = member.bio;
+      document.getElementById("teamImageUrl").value = member.image_url || "";
+      document.getElementById("teamFormTitle").textContent = "Edit Team Member";
+      const preview = document.getElementById("teamImagePreview");
+      if (member.image_url) { preview.src = member.image_url; preview.hidden = false; }
+      window.scrollTo({ top: document.getElementById("teamSection").offsetTop, behavior: "smooth" });
+    }
+    async function deleteTeamMember(id) {
+      if (!confirm("Delete this team member?")) return;
+      const result = await siteSettings.deleteTeamMember(id);
+      if (!result.success) { alert("Delete failed: " + result.error); return; }
+      await loadTeamUI();
+    }
+    document.getElementById("teamImageFile").addEventListener("change", event => {
+      const file = event.target.files[0]; if (!file) return;
+      if (file.size > 1.5 * 1024 * 1024) { alert("Please choose an image under 1.5 MB."); event.target.value = ""; return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        document.getElementById("teamImageUrl").value = reader.result;
+        const preview = document.getElementById("teamImagePreview"); preview.src = reader.result; preview.hidden = false;
+      };
+      reader.readAsDataURL(file);
+    });
+    document.getElementById("teamImageUrl").addEventListener("input", event => {
+      const preview = document.getElementById("teamImagePreview");
+      if (event.target.value) { preview.src = event.target.value; preview.hidden = false; } else preview.hidden = true;
+    });
+    document.getElementById("teamForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const id = Number(document.getElementById("teamMemberId").value);
+      const existing = teamMembers.find(row => row.id === id);
+      const member = {
+        id: id || teamMembers.reduce((max, row) => Math.max(max, Number(row.id) || 0), 0) + 1,
+        name: document.getElementById("teamName").value.trim(),
+        role: document.getElementById("teamRole").value.trim(),
+        bio: document.getElementById("teamBio").value.trim(),
+        image_url: document.getElementById("teamImageUrl").value.trim(),
+        sort_order: existing ? existing.sort_order : teamMembers.length + 1,
+        created_at: existing ? existing.created_at : new Date().toISOString()
+      };
+      const result = await siteSettings.saveTeamMember(member);
+      const status = document.getElementById("teamSaveStatus");
+      if (!result.success) { status.style.color = "#dc2626"; status.textContent = "Error: " + result.error; return; }
+      status.style.color = "#059669"; status.textContent = "Saved ✓"; setTimeout(() => status.textContent = "", 2500);
+      resetTeamForm(); await loadTeamUI();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const originalInit = () => {
+        if (!authManager.isAdmin()) return;
+        loadSiteSettingsUI();
+      };
+      setTimeout(originalInit, 300); // after admin access check has run
+    });
   </script>
 </body>
 </html>
