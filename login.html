@@ -8,12 +8,14 @@
   <link rel="stylesheet" href="css/styles.css">
   <style>
     .auth-container {
-      max-width: 440px;
+      max-width: 320px;
       margin: 0 auto;
       min-height: 60vh;
     }
 
     .auth-card {
+      max-width: 320px;
+      margin: 0 auto;
       background: white;
       border-radius: 0.75rem;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -29,10 +31,10 @@
 
     .tab-btn {
       flex: 1;
-      padding: 0.65rem 1rem;
+      padding: 0.55rem 0.75rem;
       border: none;
       border-radius: 0.5rem;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       background: transparent;
@@ -45,13 +47,27 @@
     }
 
     .auth-form {
-      padding: 2rem;
+      padding: 1.25rem;
+    }
+
+    .auth-form .form-control {
+      padding: 0.55rem 0.65rem;
+      font-size: 0.9rem;
+    }
+
+    .auth-form .form-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .auth-form .form-label {
+      font-size: 0.85rem;
+      margin-bottom: 0.3rem;
     }
 
     .auth-form h2 {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       font-weight: bold;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       color: #111;
     }
 
@@ -65,7 +81,7 @@
 
     @media (max-width: 768px) {
       .auth-form {
-        padding: 1.5rem;
+        padding: 1.25rem;
       }
     }
   </style>
@@ -144,8 +160,7 @@
         <button type="button" onclick="autoFillDemo()" class="btn btn-secondary"
           style="width: 100%; margin-top: 1rem;">Use Demo Account</button>
       </div>
-    </div>
-    <div class="auth-form auth-panel is-hidden" id="registerForm" hidden>
+      <div class="auth-form auth-panel is-hidden" id="registerForm" hidden>
       <h2>Register</h2>
       <form id="registerFormElement" onsubmit="handleRegister(event)">
         <div class="form-group">
@@ -180,11 +195,11 @@
 
         <p style="text-align: center; margin-top: 1rem; color: #666;">
           Already have an account? <a href="#login" onclick="showAuthForm('login'); return false;"
-            style="color: #2563eb; text-decoration: none; font-weight: 600;">Already have an account?</a>
+            style="color: #2563eb; text-decoration: none; font-weight: 600;">Sign in here</a>
         </p>
       </form>
     </div>
-  </div>
+    </div>
   </div>
   <footer class="footer">
     <div class="footer-content">
@@ -241,11 +256,13 @@
       tabRegister.classList.toggle("is-active", !showLogin);
       tabRegister.setAttribute("aria-selected", !showLogin);
 
+      clearTimeout(hiding._hideTimer);
       hiding.classList.remove("is-visible");
       hiding.classList.add("is-hidden");
-      setTimeout(() => { hiding.hidden = true; }, 1000);
-
+      hiding._hideTimer = setTimeout(() => { hiding.hidden = true; }, 1000);
+      clearTimeout(showing._hideTimer);
       showing.hidden = false;
+
       showing.classList.remove("is-hidden");
       showing.classList.add("is-entering");
       void showing.offsetWidth;
@@ -261,14 +278,14 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
-      const users = authManager.getAllUsers();
+      const users = await authManager.getAllUsers();
       if (!users.some(u => u.email === "demo@example.com")) {
         await authManager.register("demo@example.com", "demo123", "Demo", "User");
         authManager.logout();
       }
       if (!users.some(u => u.email === "admin@example.com")) {
         await authManager.register("admin@example.com", "admin123", "Store", "Admin");
-        const adminUsers = authManager.getAllUsers();
+        const adminUsers = await authManager.getAllUsers();
         const admin = adminUsers.find(user => user.email === "admin@example.com");
         if (admin) {
           admin.role = "admin";
@@ -282,7 +299,7 @@
       showAuthForm(window.location.hash === "#register" ? "register" : "login");
     });
 
-    function handleLogin(e) {
+    async function handleLogin(e) {
       e.preventDefault();
       const email = document.getElementById("loginEmail").value;
       const password = document.getElementById("loginPassword").value;

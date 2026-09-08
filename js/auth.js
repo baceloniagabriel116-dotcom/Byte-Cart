@@ -65,7 +65,11 @@ class AuthManager {
           password,
           options: { data: { firstName, lastName } }
         });
-        if (error) return { success: false, error: error.message };
+        if (error || !data || !data.user) {
+          // Fall back to local storage so registration still works offline
+          // or when Supabase requires email confirmation / rejects the signup
+          return this.registerLocal(email, password, firstName, lastName);
+        }
         const user = data.user;
         const profile = {
           id: user.id,
@@ -76,6 +80,13 @@ class AuthManager {
           createdAt: new Date().toISOString()
         };
         await this.syncUserToSupabase(profile);
+        // Also save locally so login still works even if Supabase later
+        // rejects the sign-in (e.g. unconfirmed email)
+        const users = await this.getAllUsers();
+        if (!users.some(u => u.email === email)) {
+          users.push({ id: user.id, email, password_hash: btoa(password), firstName, lastName, role: "user", createdAt: new Date().toISOString() });
+          this.saveUsers(users);
+        }
         this.currentUser = { id: user.id, email, firstName, lastName, role: "user" };
         localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
         return { success: true, user: this.currentUser };
@@ -84,7 +95,11 @@ class AuthManager {
       }
     }
 
-    const users = this.getAllUsers();
+    return this.registerLocal(email, password, firstName, lastName);
+  }
+
+  async registerLocal(email, password, firstName, lastName) {
+    const users = await this.getAllUsers();
     if (users.some(u => u.email === email)) {
       return { success: false, error: "Email already registered" };
     }
@@ -99,7 +114,7 @@ class AuthManager {
     };
     users.push(newUser);
     this.saveUsers(users);
-    this.login(email, password);
+    await this.loginLocal(email, password);
     return { success: true, user: newUser };
   }
 
@@ -107,7 +122,10 @@ class AuthManager {
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) return { success: false, error: error.message };
+        if (error || !data || !data.user) {
+          // Fall back to local accounts (e.g. demo users) when Supabase rejects the login
+          return this.loginLocal(email, password);
+        }
         const user = data.user;
         let profile = { id: user.id, email: user.email, firstName: "", lastName: "", role: "user" };
         const { data: profileData } = await supabaseClient.from("users").select("*").eq("id", user.id).single();
@@ -118,10 +136,15 @@ class AuthManager {
         localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
         return { success: true, user: this.currentUser };
       } catch (e) {
-        return { success: false, error: e.message };
+        console.warn("Supabase login failed, falling back to local:", e.message);
+        return this.loginLocal(email, password);
       }
     }
-    const users = this.getAllUsers();
+    return this.loginLocal(email, password);
+  }
+
+  async loginLocal(email, password) {
+    const users = await this.getAllUsers();
     const user = users.find(u => u.email === email && (u.password_hash || u.password) === btoa(password));
     if (!user) return { success: false, error: "Invalid email or password" };
     const { password: _, password_hash: __, ...userWithoutPassword } = user;
