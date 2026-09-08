@@ -8,33 +8,33 @@
   <link rel="stylesheet" href="css/styles.css">
   <style>
     .auth-container {
-      max-width: 320px;
+      max-width: 440px;
       margin: 0 auto;
       min-height: 60vh;
     }
 
     .auth-card {
-      max-width: 320px;
+      max-width: 440px;
       margin: 0 auto;
       background: white;
-      border-radius: 0.75rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
       overflow: hidden;
     }
 
     .tab-bar {
       display: flex;
       gap: 0.5rem;
-      padding: 0.75rem;
+      padding: 1rem;
       background: #f3f4f6;
     }
 
     .tab-btn {
       flex: 1;
-      padding: 0.55rem 0.75rem;
+      padding: 0.7rem 1rem;
       border: none;
       border-radius: 0.5rem;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       background: transparent;
@@ -47,28 +47,33 @@
     }
 
     .auth-form {
-      padding: 1.25rem;
+      padding: 2rem;
     }
 
     .auth-form .form-control {
-      padding: 0.55rem 0.65rem;
-      font-size: 0.9rem;
+      padding: 0.7rem 0.8rem;
+      font-size: 1rem;
     }
 
     .auth-form .form-group {
-      margin-bottom: 0.85rem;
+      margin-bottom: 1.1rem;
     }
 
     .auth-form .form-label {
-      font-size: 0.85rem;
-      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
     }
 
     .auth-form h2 {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: bold;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
       color: #111;
+    }
+
+    .auth-form .btn {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
     }
 
     .auth-panel.is-hidden {
@@ -80,8 +85,12 @@
     }
 
     @media (max-width: 768px) {
+      .auth-container,
+      .auth-card {
+        max-width: 92vw;
+      }
       .auth-form {
-        padding: 1.25rem;
+        padding: 1.5rem;
       }
     }
   </style>
@@ -141,7 +150,7 @@
 
           <div id="loginError" class="form-error" style="margin-bottom: 1rem;"></div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Sign In</button>
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem;">Sign In</button>
 
           <p style="text-align: center; margin-top: 1rem; color: #666;">
             Don't have an account? <a href="#register" onclick="showAuthForm('register'); return false;"
@@ -158,47 +167,47 @@
           Password: <code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">demo123</code>
         </p>
         <button type="button" onclick="autoFillDemo()" class="btn btn-secondary"
-          style="width: 100%; margin-top: 1rem;">Use Demo Account</button>
+          style="width: 100%; margin-top: 1rem; padding: 0.8rem 1.5rem; font-size: 1rem;">Use Demo Account</button>
       </div>
       <div class="auth-form auth-panel is-hidden" id="registerForm" hidden>
-      <h2>Register</h2>
-      <form id="registerFormElement" onsubmit="handleRegister(event)">
-        <div class="form-group">
-          <label class="form-label">First Name</label>
-          <input type="text" id="registerFirstName" class="form-control" required>
-        </div>
+        <h2>Register</h2>
+        <form id="registerFormElement" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" id="registerFirstName" class="form-control" required>
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Last Name</label>
-          <input type="text" id="registerLastName" class="form-control" required>
-        </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" id="registerLastName" class="form-control" required>
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" id="registerEmail" class="form-control" required>
-        </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="registerEmail" class="form-control" required>
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" id="registerPassword" class="form-control" required minlength="6">
-          <small style="color: #666;">At least 6 characters</small>
-        </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="registerPassword" class="form-control" required minlength="6">
+            <small style="color: #666;">At least 6 characters</small>
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Confirm Password</label>
-          <input type="password" id="registerConfirm" class="form-control" required minlength="6">
-        </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" id="registerConfirm" class="form-control" required minlength="6">
+          </div>
 
-        <div id="registerError" class="form-error" style="margin-bottom: 1rem;"></div>
+          <div id="registerError" class="form-error" style="margin-bottom: 1rem;"></div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Create Account</button>
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem;">Create Account</button>
 
-        <p style="text-align: center; margin-top: 1rem; color: #666;">
-          Already have an account? <a href="#login" onclick="showAuthForm('login'); return false;"
-            style="color: #2563eb; text-decoration: none; font-weight: 600;">Sign in here</a>
-        </p>
-      </form>
-    </div>
+          <p style="text-align: center; margin-top: 1rem; color: #666;">
+            Already have an account? <a href="#login" onclick="showAuthForm('login'); return false;"
+              style="color: #2563eb; text-decoration: none; font-weight: 600;">Sign in here</a>
+          </p>
+        </form>
+      </div>
     </div>
   </div>
   <footer class="footer">
@@ -226,7 +235,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p id="footerCopyright">Â© 2026 ByteCart. All rights reserved.</p>
+      <p id="footerCopyright">© 2026 ByteCart. All rights reserved.</p>
     </div>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
