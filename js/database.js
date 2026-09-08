@@ -1,4 +1,3 @@
-// Local-first database adapter with optional Supabase synchronization.
 const PRODUCT_CATEGORIES = Object.freeze(["electronics", "wearables", "accessories"]);
 class Database {
   constructor() {

@@ -1,4 +1,3 @@
-/* Global Styles */
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +11,6 @@ body {
   line-height: 1.6;
 }
 
-/* Navbar */
 .navbar {
   background: white;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -91,7 +89,6 @@ body {
   gap: 0.75rem;
 }
 
-/* Auth links in the header top-right (Login text + Register button) */
 .nav-auth-links .nav-login-link {
   display: inline-flex;
   align-items: center;
@@ -195,7 +192,6 @@ body {
   font-weight: bold;
 }
 
-/* Hero Section */
 .hero {
   background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   color: white;
@@ -231,21 +227,15 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
-/* Grid */
 .grid {
   display: grid;
   gap: 2rem;
-}
-
-.grid-cols-1 {
-  grid-template-columns: 1fr;
 }
 
 .grid-cols-3 {
@@ -282,7 +272,6 @@ body {
   }
 }
 
-/* Product Card */
 .product-card {
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
@@ -396,9 +385,7 @@ body {
 
 .category-card {
   transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
-}
-
-.category-card:hover,
+}.category-card:hover,
 .category-link:hover .category-card {
   transform: translateY(-6px) scale(1.02);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
@@ -445,7 +432,6 @@ body {
   background: #dc2626;
 }
 
-/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -492,17 +478,6 @@ body {
   color: #999;
 }
 
-/* Scroll and touch interactions */
-.pressable {
-  transition: transform 180ms ease, opacity 180ms ease;
-}
-
-.pressable:active {
-  transform: scale(0.97);
-  opacity: 0.92;
-}
-
-/* Form */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -551,7 +526,6 @@ body {
   margin-top: 0.25rem;
 }
 
-/* Checkout */
 .checkout-layout {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -574,7 +548,6 @@ body {
   border-radius: 0.5rem;
 }
 
-/* Standard phone (portrait) orientation */
 @media (max-width: 768px) and (orientation: portrait) {
   .checkout-layout {
     grid-template-columns: 1fr;
@@ -587,7 +560,6 @@ body {
   }
 }
 
-/* Narrow landscape phones need the same single-column checkout layout. */
 @media (max-width: 768px) and (orientation: landscape) {
   .checkout-layout {
     grid-template-columns: 1fr;
@@ -605,7 +577,6 @@ body {
   }
 }
 
-/* Footer */
 .footer {
   background: #111;
   color: white;
@@ -661,21 +632,8 @@ body {
   color: #999;
 }
 
-/* Utilities */
 .text-center {
   text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
-.hidden {
-  display: none;
 }
 
 .flex {
@@ -686,22 +644,6 @@ body {
   gap: 1rem;
 }
 
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.sticky {
-  position: sticky;
-}
-
-.top-4 {
-  top: 1rem;
-}
-
-/* Product Detail Page Enhancements */
 #productDetail button:not(.modal button) {
   transition: all 0.3s ease;
 }
@@ -726,7 +668,6 @@ body {
   transform: scale(1.02);
 }
 
-/* Responsive Product Detail */
 @media (max-width: 768px) {
   #productDetail > div {
     grid-template-columns: 1fr !important;
@@ -742,7 +683,6 @@ body {
   }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
@@ -789,7 +729,6 @@ body {
     padding: 0.5rem;
   }
 
-  /* Keep the profile controls beside the logo without overflowing small screens. */
   #userMenu .flex {
     display: flex;
     align-items: center;

@@ -1,4 +1,3 @@
-// Product Database
 const seedProducts = [
   {
     id: 1,

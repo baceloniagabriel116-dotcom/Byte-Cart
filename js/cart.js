@@ -1,4 +1,3 @@
-// Shopping Cart System
 class CartManager {
   constructor() {
     this.cartKey = "shopping-cart";
@@ -202,7 +201,6 @@ class SalesManager {
   }
 }
 
-// Review Management System
 class ReviewManager {
   constructor() {
     this.reviewsKey = "product-reviews";
@@ -226,7 +224,6 @@ class ReviewManager {
     localStorage.setItem(this.reviewsKey, JSON.stringify(this.reviews));
   }
 
-  // Check if user has verified purchase for this product
   async hasRemoteVerifiedPurchase(productId) {
     if (!isSupabaseConfigured || !authManager.isLoggedIn()) return false;
     try {
@@ -245,22 +242,22 @@ class ReviewManager {
 
   async canUserReview(productId) {
     if (!authManager.isLoggedIn()) return false;
-    
+
     const currentUser = authManager.getCurrentUser();
     const localTransactions = database.getTransactions();
     const hasVerifiedPurchase = localTransactions.some(transaction =>
       transaction.user_id === currentUser.id && transaction.product_id === productId && transaction.status === "completed"
     );
-    
+
     if (!hasVerifiedPurchase && isSupabaseConfigured) {
       const remote = await this.hasRemoteVerifiedPurchase(productId);
       if (!remote) return false;
     }
-    
+
     const alreadyReviewed = this.reviews.some(
       review => review.userId === currentUser.id && review.productId === productId
     );
-    
+
     return !alreadyReviewed;
   }
 
@@ -298,21 +295,18 @@ class ReviewManager {
     return { success: true, review };
   }
 
-  // Get reviews for a specific product
   getProductReviews(productId) {
     return this.reviews.filter(review => review.productId === productId);
   }
 
-  // Calculate average rating from reviews
   getProductAverageRating(productId) {
     const productReviews = this.getProductReviews(productId);
     if (productReviews.length === 0) return 0;
-    
+
     const totalRating = productReviews.reduce((sum, review) => sum + review.rating, 0);
     return (totalRating / productReviews.length).toFixed(1);
   }
 
-  // Delete review (only by owner or admin)
   deleteReview(reviewId) {
     const review = this.reviews.find(r => r.id === reviewId);
     if (!review) return { success: false, error: "Review not found" };

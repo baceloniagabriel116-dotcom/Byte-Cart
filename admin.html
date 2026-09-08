@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -51,8 +51,6 @@
         <section class="admin-panel"><h2>Product Inventory</h2><div class="table-scroll"><table class="admin-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productRows"></tbody></table></div></section>
       </section>
       <section class="admin-panel" style="margin-top: 2rem"><h2>Global Sales &amp; Transaction History</h2><div class="table-scroll"><table class="admin-table"><thead><tr><th>Order ID</th><th>Buyer Account</th><th>Product</th><th>Quantity</th><th>Total Price</th><th>Date/Time</th><th>Status</th></tr></thead><tbody id="transactionRows"></tbody></table></div></section>
-
-      <!-- ===== Site Customization: Footer + Team ===== -->
       <section class="site-grid">
         <form id="footerSettingsForm" class="admin-panel">
           <h2>Footer Settings</h2>
@@ -81,7 +79,7 @@
           <div class="form-group"><label class="form-label" for="teamRole">Role / Title</label><input id="teamRole" class="form-control" required></div>
           <div class="form-group"><label class="form-label" for="teamBio">Bio / Info</label><textarea id="teamBio" class="form-control" rows="3" required></textarea></div>
           <div class="form-group"><label class="form-label" for="teamImageUrl">Profile Picture URL</label><input id="teamImageUrl" class="form-control" placeholder="https://... or upload below"></div>
-          <div class="form-group"><label class="form-label" for="teamImageFile">…or Upload Picture</label><input id="teamImageFile" class="form-control" type="file" accept="image/*"></div>
+          <div class="form-group"><label class="form-label" for="teamImageFile">â€¦or Upload Picture</label><input id="teamImageFile" class="form-control" type="file" accept="image/*"></div>
           <img id="teamImagePreview" class="team-card-preview" alt="" hidden>
           <div style="margin-top:1rem;"><button class="btn btn-primary" type="submit">Save Member</button> <button class="btn btn-secondary" type="button" onclick="resetTeamForm()">Cancel</button></div>
           <span id="teamSaveStatus" style="margin-left:.5rem; font-size:.85rem; color:#059669;"></span>
@@ -109,13 +107,13 @@
         <a href="#">Shipping Info</a>
       </div>
     </div>
-    <div class="footer-bottom"><p>© 2026 ByteCart. All rights reserved.</p></div>
+    <div class="footer-bottom"><p>Â© 2026 ByteCart. All rights reserved.</p></div>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase.js"></script><script src="js/database.js"></script><script src="data/products.js"></script><script src="js/auth.js"></script><script src="js/cart.js"></script><script src="js/transitions.js" defer></script>
   <script src="js/app.js"></script>
   <script src="js/site.js"></script>
   <script>
-    const peso = value => `₱${Number(value).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const peso = value => `â‚±${Number(value).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     const fallbackImage = "assets/default-tech-placeholder.svg";
     function renderAdmin() {
       const products = database.getProducts();
@@ -139,7 +137,6 @@
     });
     window.addEventListener("databaseUpdated", renderAdmin);
 
-    // ===== Site Customization: Footer + Team =====
     const socialStatus = msg => { const el = document.getElementById("socialSaveStatus"); el.textContent = msg; setTimeout(() => el.textContent = "", 2500); };
 
     async function loadSiteSettingsUI() {
@@ -163,7 +160,7 @@
     }
     async function persistSocialLinks() {
       const result = await siteSettings.saveSetting("social_links", socialLinks);
-      socialStatus(result.success ? "Saved ✓" : "Error: " + result.error);
+      socialStatus(result.success ? "Saved âœ“" : "Error: " + result.error);
     }
     async function updateSocialLink(index, field, value) { socialLinks[index][field] = value.trim(); await persistSocialLinks(); }
     async function removeSocialLink(index) { socialLinks.splice(index, 1); renderSocialRows(); await persistSocialLinks(); }
@@ -182,11 +179,10 @@
       const copyright = document.getElementById("settingCopyright").value.trim();
       const result = await siteSettings.saveSettings({ brand_name: brand, copyright_text: copyright });
       const status = document.getElementById("footerSaveStatus");
-      status.textContent = result.success ? "Saved ✓" : "Error: " + result.error;
+      status.textContent = result.success ? "Saved âœ“" : "Error: " + result.error;
       setTimeout(() => status.textContent = "", 2500);
     });
 
-    // ----- Team members CRUD -----
     let teamMembers = [];
     async function loadTeamUI() {
       teamMembers = await siteSettings.loadTeam();
@@ -255,7 +251,7 @@
       const result = await siteSettings.saveTeamMember(member);
       const status = document.getElementById("teamSaveStatus");
       if (!result.success) { status.style.color = "#dc2626"; status.textContent = "Error: " + result.error; return; }
-      status.style.color = "#059669"; status.textContent = "Saved ✓"; setTimeout(() => status.textContent = "", 2500);
+      status.style.color = "#059669"; status.textContent = "Saved âœ“"; setTimeout(() => status.textContent = "", 2500);
       resetTeamForm(); await loadTeamUI();
     });
 
@@ -264,7 +260,7 @@
         if (!authManager.isAdmin()) return;
         loadSiteSettingsUI();
       };
-      setTimeout(originalInit, 300); // after admin access check has run
+      setTimeout(originalInit, 300);
     });
   </script>
 </body>

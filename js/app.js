@@ -1,4 +1,3 @@
-// Main Application Logic
 class EcommerceApp {
   constructor() {
     this.init();
@@ -31,7 +30,6 @@ class EcommerceApp {
   }
 
   setupEventListeners() {
-    // Cart updates
     window.addEventListener("cartUpdated", () => this.updateCartUI());
   }
 
@@ -92,7 +90,6 @@ class EcommerceApp {
       }
       if (authButtons) authButtons.style.display = "none";
     } else {
-      // Keep the styled markup from the HTML pages — just make sure it's visible.
       if (authButtons) authButtons.style.display = "";
       if (userMenu) userMenu.innerHTML = "";
     }
@@ -102,12 +99,10 @@ class EcommerceApp {
     const container = document.getElementById("productDetail");
     if (!container) return;
 
-    // Get dynamic reviews
     const productReviews = reviewManager.getProductReviews(product.id);
     const reviewCount = productReviews.length;
     const avgRating = reviewManager.getProductAverageRating(product.id);
 
-    // Build rating display (only if reviews exist)
     let ratingHTML = "";
     if (reviewCount > 0) {
       const stars = '★'.repeat(Math.floor(avgRating)) + (avgRating % 1 >= 0.5 ? '★' : '');
@@ -133,29 +128,23 @@ class EcommerceApp {
 
     container.innerHTML = `
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;">
-        <!-- Left: Product Image -->
         <div style="position: sticky; top: 100px;">
           <div style="background: #f9fafb; border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <img src="${product.image_url || 'assets/default-tech-placeholder.svg'}" alt="${product.name}" class="product-detail-image">
           </div>
         </div>
 
-        <!-- Right: Product Details -->
         <div>
-          <!-- Category Badge -->
           <div style="display: inline-block;">
             <span style="background: #f3f4f6; color: #666; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 1rem; border-radius: 0.25rem;">${product.categories.join(", ")}</span>
           </div>
 
-          <!-- Product Title -->
           <h1 style="font-size: 2.5rem; font-weight: 700; color: #111; margin-top: 1rem; line-height: 1.2;">
             ${product.name}
           </h1>
 
-          <!-- Dynamic Rating Display -->
           ${ratingHTML}
 
-          <!-- Price Section -->
           <div style="margin-top: 2rem; padding: 2rem 0; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;">
             <div style="display: flex; align-items: baseline; gap: 1rem;">
               <span style="font-size: 2.5rem; font-weight: 800; color: #2563eb;">₱${product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
@@ -163,36 +152,30 @@ class EcommerceApp {
             </div>
             <span class="product-sales">✓ ${salesManager.getSalesCount(product.id)} bought</span>
 
-            <!-- Stock Badge -->
             <div style="margin-top: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; background: #ecfdf5; color: #166534; padding: 0.5rem 1rem; border-radius: 9999px; font-weight: 600; font-size: 0.9rem;">
               <span style="font-size: 1.2rem;">●</span>
               <span>${product.stock} in stock</span>
             </div>
           </div>
 
-          <!-- Product Description -->
           <p style="font-size: 1rem; color: #666; line-height: 1.7; margin-top: 2rem;">
             ${product.description}
           </p>
 
 
-          <!-- Quantity Selector & CTA -->
           <div style="margin-top: 3rem; display: flex; gap: 1rem; align-items: center;">
-            <!-- Quantity Selector -->
             <div style="display: flex; align-items: center; background: #f3f4f6; border-radius: 0.5rem; border: 1px solid #e5e7eb; width: fit-content;">
               <button onclick="decreaseQuantity()" style="background: none; border: none; padding: 0.75rem 1rem; cursor: pointer; font-size: 1.2rem; color: #666; transition: all 0.2s;">−</button>
               <input type="number" id="quantity" value="1" min="1" max="${product.stock}" style="width: 60px; text-align: center; border: none; background: transparent; font-weight: 600; font-size: 1rem; outline: none;">
               <button onclick="increaseQuantity(${product.stock})" style="background: none; border: none; padding: 0.75rem 1rem; cursor: pointer; font-size: 1.2rem; color: #666; transition: all 0.2s;">+</button>
             </div>
 
-            <!-- Add to Cart Button -->
             <button onclick="addProductToCart(${product.id}, parseInt(document.getElementById('quantity').value))" style="flex: 1; padding: 1rem 2rem; background: #2563eb; color: white; border: none; border-radius: 0.5rem; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
               <span style="font-size: 1.3rem;">🛒</span>
               <span>Add to Cart</span>
             </button>
           </div>
 
-          <!-- Buy Now Button -->
           <button onclick="buyNowProduct(${product.id}, parseInt(document.getElementById('quantity').value))" style="width: 100%; margin-top: 1rem; padding: 1rem; background: white; color: #2563eb; border: 2px solid #2563eb; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
             <span>Buy Now</span>
           </button>
@@ -308,7 +291,6 @@ class EcommerceApp {
   }
 }
 
-// Global function helpers
 function addProductToCart(productId, quantity = 1) {
   const product = products.find(p => p.id === productId);
   if (product) {
@@ -353,21 +335,6 @@ function showNotification(message, type = "info") {
   setTimeout(() => notification.remove(), 3000);
 }
 
-// Toast that survives navigation: saved in sessionStorage and
-// re-shown once on the next page, then cleared.
-function showPageTransitionToast(message, type = "success") {
-  try { sessionStorage.setItem("pendingToast", JSON.stringify({ message, type })); } catch (e) {}
-  window.addEventListener("DOMContentLoaded", () => {
-    try {
-      const data = JSON.parse(sessionStorage.getItem("pendingToast"));
-      if (data) {
-        sessionStorage.removeItem("pendingToast");
-        showNotification(data.message, data.type);
-      }
-    } catch (e) {}
-  });
-}
-
 function showLoginModal(message = "Please log in to continue") {
   const modal = document.getElementById("loginModal");
   if (modal) {
@@ -381,7 +348,6 @@ function closeLoginModal() {
   if (modal) modal.classList.remove("show");
 }
 
-// Quantity controls for product detail page
 function decreaseQuantity() {
   const quantityInput = document.getElementById("quantity");
   if (quantityInput && parseInt(quantityInput.value) > 1) {
@@ -407,8 +373,6 @@ function buyNowProduct(productId, quantity) {
   }
 }
 
-// Initialize app when DOM is ready
-// Review Section Functions
 function displayReviewSection(productId) {
   const reviewSection = document.getElementById("reviewsSection");
   if (!reviewSection) return;
@@ -422,7 +386,6 @@ function displayReviewSection(productId) {
       <h2 style="font-size: 1.75rem; font-weight: 700; color: #111; margin-bottom: 2rem;">Customer Reviews</h2>
   `;
 
-  // Review submission form (only for verified buyers)
   if (isLoggedIn && canReview) {
     reviewsHTML += `
       <div style="background: #f9fafb; padding: 2rem; border-radius: 0.75rem; margin-bottom: 2rem; border: 1px solid #e5e7eb;">
@@ -461,7 +424,6 @@ function displayReviewSection(productId) {
     `;
   }
 
-  // Display existing reviews
   if (productReviews.length > 0) {
     reviewsHTML += `
       <div style="margin-top: 2rem;">
@@ -557,7 +519,6 @@ function deleteProductReview(reviewId) {
   }
 }
 
-// Initialize app when DOM is ready
 let app;
 document.addEventListener("DOMContentLoaded", () => {
   app = new EcommerceApp();

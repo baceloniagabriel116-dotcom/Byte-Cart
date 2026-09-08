@@ -1,4 +1,3 @@
-// Authentication System
 class AuthManager {
   constructor() {
     this.currentUser = this.loadUser();
@@ -133,7 +132,7 @@ class AuthManager {
 
   async logout() {
     if (isSupabaseConfigured) {
-      try { await supabaseClient.auth.signOut(); } catch (e) { /* ignore */ }
+      try { await supabaseClient.auth.signOut(); } catch (e) { }
     }
     this.currentUser = null;
     localStorage.removeItem("currentUser");

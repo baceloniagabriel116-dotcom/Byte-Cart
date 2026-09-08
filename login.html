@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,7 +7,6 @@
   <title>Login & Register - Byte Cart</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    /* ===== Auth card with tab bar ===== */
     .auth-container {
       max-width: 440px;
       margin: 0 auto;
@@ -21,7 +20,6 @@
       overflow: hidden;
     }
 
-    /* Tab bar: active = dark, inactive = soft gray */
     .tab-bar {
       display: flex;
       gap: 0.5rem;
@@ -75,7 +73,6 @@
 </head>
 
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-container">
       <a href="index.html" class="logo"><img src="assets/shopping cart image.png" alt="Byte Cart logo"><span
@@ -105,19 +102,14 @@
       </div>
     </div>
   </nav>
-
-  <!-- Auth Section -->
   <div class="container" style="padding: 3rem 1rem;">
     <div class="auth-card">
-      <!-- Tab bar -->
       <div class="tab-bar" role="tablist" aria-label="Authentication">
         <button type="button" class="tab-btn is-active" id="tabLogin" role="tab" aria-selected="true"
           onclick="showAuthForm('login')">Login</button>
         <button type="button" class="tab-btn" id="tabRegister" role="tab" aria-selected="false"
           onclick="showAuthForm('register')">Register</button>
       </div>
-
-      <!-- Login Form -->
       <div class="auth-form auth-panel is-visible" id="loginPanel">
         <h2>Login</h2>
         <form id="loginForm" onsubmit="handleLogin(event)">
@@ -153,8 +145,6 @@
           style="width: 100%; margin-top: 1rem;">Use Demo Account</button>
       </div>
     </div>
-
-    <!-- Register Form -->
     <div class="auth-form auth-panel is-hidden" id="registerForm" hidden>
       <h2>Register</h2>
       <form id="registerFormElement" onsubmit="handleRegister(event)">
@@ -196,8 +186,6 @@
     </div>
   </div>
   </div>
-
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -223,11 +211,9 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p id="footerCopyright">© 2026 ByteCart. All rights reserved.</p>
+      <p id="footerCopyright">Â© 2026 ByteCart. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
   <script src="js/database.js"></script>
@@ -238,10 +224,8 @@
   <script src="js/app.js"></script>
   <script src="js/site.js"></script>
   <script>
-    // Render admin-managed footer on the auth page too
     siteSettings.renderFooter();
 
-    // ===== Tab-switching with slow cross-fade + slide =====
     function showAuthForm(form) {
       const loginPanel = document.getElementById("loginPanel");
       const registerPanel = document.getElementById("registerForm");
@@ -252,23 +236,18 @@
       const showing = showLogin ? loginPanel : registerPanel;
       const hiding = showLogin ? registerPanel : loginPanel;
 
-      // Sync tab bar active state (dark bg / white text vs soft gray)
       tabLogin.classList.toggle("is-active", showLogin);
       tabLogin.setAttribute("aria-selected", showLogin);
       tabRegister.classList.toggle("is-active", !showLogin);
       tabRegister.setAttribute("aria-selected", !showLogin);
 
-      // Fade out the outgoing panel; display:none kicks in only after the
-      // transition finishes so the fade-out is actually visible
       hiding.classList.remove("is-visible");
       hiding.classList.add("is-hidden");
-      setTimeout(() => { hiding.hidden = true; }, 1000); // matches the 1s transition
+      setTimeout(() => { hiding.hidden = true; }, 1000);
 
-      // Reveal incoming: start hidden (offscreen + transparent), then animate in
       showing.hidden = false;
       showing.classList.remove("is-hidden");
       showing.classList.add("is-entering");
-      // Force a reflow so the browser registers the starting state before transitioning
       void showing.offsetWidth;
       showing.classList.remove("is-entering");
       showing.classList.add("is-visible");
@@ -276,13 +255,11 @@
       window.location.hash = form;
     }
 
-    // Pre-populate demo account on page load
     function autoFillDemo() {
       document.getElementById("loginEmail").value = "demo@example.com";
       document.getElementById("loginPassword").value = "demo123";
     }
 
-    // Create demo account if it doesn't exist
     document.addEventListener("DOMContentLoaded", async () => {
       const users = authManager.getAllUsers();
       if (!users.some(u => u.email === "demo@example.com")) {
@@ -346,26 +323,43 @@
       const result = await authManager.register(email, password, firstName, lastName);
 
       if (result.success) {
-        const modal = document.createElement("div");
-        modal.style.cssText = "position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);";
-        modal.innerHTML = `
-          <div style="background:white;padding:2rem;border-radius:0.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 25px rgba(0,0,0,0.15);">
-            <h2 style="font-size:1.25rem;font-weight:bold;margin-bottom:1rem;color:#10b981;">Success</h2>
-            <p style="color:#666;margin-bottom:1.5rem;">Account successfully registered! Proceeding to login...</p>
-            <button id="okBtn" style="padding:0.75rem 2rem;background:#2563eb;color:white;border:none;border-radius:0.375rem;font-weight:600;cursor:pointer;">OK</button>
+        const overlay = document.createElement("div");
+        overlay.style.cssText = "position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.96);";
+        overlay.innerHTML = `
+          <div style="text-align:center;max-width:400px;width:90%;">
+            <div id="registerSpinner" style="margin:0 auto 1.5rem;width:56px;height:56px;border:5px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:regSpin 0.9s linear infinite;"></div>
+            <h2 style="font-size:1.25rem;font-weight:bold;margin-bottom:0.75rem;color:#10b981;">Account successfully registered!</h2>
+            <p id="registerLoadMsg" style="color:#666;margin-bottom:1.25rem;">Creating your account, please wait...</p>
+            <div style="width:100%;height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;">
+              <div id="registerProgressBar" style="width:0%;height:100%;background:#2563eb;border-radius:999px;transition:width 0.1s linear;"></div>
+            </div>
+            <p id="registerCountdown" style="color:#9ca3af;font-size:0.85rem;margin-top:0.75rem;">Redirecting to login in 3s...</p>
           </div>
+          <style>@keyframes regSpin { to { transform: rotate(360deg); } }</style>
         `;
-        document.body.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        const DURATION = 3000;
+        const startedAt = Date.now();
+        const bar = overlay.querySelector("#registerProgressBar");
+        const countdown = overlay.querySelector("#registerCountdown");
+
+        const tick = setInterval(() => {
+          const elapsed = Math.min(Date.now() - startedAt, DURATION);
+          const remaining = Math.ceil((DURATION - elapsed) / 1000);
+          bar.style.width = (elapsed / DURATION) * 100 + "%";
+          countdown.textContent = "Redirecting to login in " + remaining + "s...";
+        }, 100);
 
         let redirected = false;
         const redirect = () => {
           if (redirected) return;
           redirected = true;
-          window.location.href = "login.html";
+          clearInterval(tick);
+          window.location.href = "login.html#login";
         };
 
-        setTimeout(redirect, 2000);
-        modal.querySelector("#okBtn").addEventListener("click", redirect);
+        setTimeout(redirect, DURATION);
       } else {
         errorDiv.textContent = result.error;
       }

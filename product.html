@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="css/transitions.css">
 </head>
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-container">
       <a href="index.html" class="logo"><img src="assets/shopping cart image.png" alt="Byte Cart logo"><span class="logo-byte">Byte</span><span class="logo-cart">Cart</span></a>
@@ -37,8 +36,6 @@
       </div>
     </div>
   </nav>
-
-  <!-- Breadcrumb -->
   <div class="container">
     <div style="padding: 2rem 0; border-bottom: 1px solid #e5e7eb;">
       <a href="index.html" style="color: #2563eb; text-decoration: none;">Home</a>
@@ -48,24 +45,17 @@
       <span id="breadcrumbProduct">Product</span>
     </div>
   </div>
-
-  <!-- Product Detail -->
   <div class="container" style="max-width: 1200px; padding: 3rem 1rem;">
     <div id="productDetail" style="padding: 2rem 0;"></div>
-    <!-- Reviews Section -->
     <div class="container" style="max-width: 1200px; padding: 0 1rem;">
       <div id="reviewsSection" style="padding: 2rem 0;"></div>
     </div>
 
   </div>
-
-  <!-- Related Products -->
   <div class="container" id="relatedSection" style="display: none; margin-bottom: 4rem; max-width: 1200px;">
     <h2 style="font-size: 2rem; font-weight: bold; margin-bottom: 2rem;">Related Products</h2>
     <div class="grid grid-cols-4" id="relatedProducts"></div>
   </div>
-
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -92,11 +82,9 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2027 ByteCart. All rights reserved.</p>
+      <p>Â© 2027 ByteCart. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
   <script src="js/database.js"></script>
@@ -121,14 +109,10 @@
         return;
       }
 
-      // Display product details
       app.displayProductDetail(product);
       document.getElementById("breadcrumbProduct").textContent = product.name;
-  // Display reviews section
-  displayReviewSection(product.id);
+      displayReviewSection(product.id);
 
-
-      // Display related products
       const related = products.filter(p => p.id !== product.id && p.categories.some(category => product.categories.includes(category)));
       if (related.length > 0) {
         document.getElementById("relatedSection").style.display = "block";
@@ -141,11 +125,11 @@
                 <h3 class="product-name">${p.name}</h3>
                 <p class="product-description">${p.description}</p>
                 <div class="product-rating">
-                  <span style="color: #999;">${p.reviews > 0 ? `★ ${p.rating} (${p.reviews})` : "No reviews yet"}</span>
+                  <span style="color: #999;">${p.reviews > 0 ? `â˜… ${p.rating} (${p.reviews})` : "No reviews yet"}</span>
                 </div>
                 <div class="product-price-section">
-                  <span class="product-price">₱${p.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
-                  <span class="product-sales">✓ ${salesManager.getSalesCount(p.id)} bought</span>
+                  <span class="product-price">â‚±${p.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                  <span class="product-sales">âœ“ ${salesManager.getSalesCount(p.id)} bought</span>
                 </div>
               </div>
             </div>

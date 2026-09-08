@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="css/transitions.css">
 </head>
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-container">
       <a href="index.html" class="logo"><img src="assets/shopping cart image.png" alt="Byte Cart logo"><span class="logo-byte">Byte</span><span class="logo-cart">Cart</span></a>
@@ -37,13 +36,9 @@
       </div>
     </div>
   </nav>
-
-  <!-- Success Section -->
   <div class="container" style="padding: 4rem 1rem; min-height: 60vh;">
     <div id="successContent"></div>
   </div>
-
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -70,11 +65,9 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2027 ByteCart. All rights reserved.</p>
+      <p>Â© 2027 ByteCart. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
   <script src="js/database.js"></script>
@@ -115,7 +108,7 @@
 
       document.getElementById("successContent").innerHTML = `
         <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+          <div style="font-size: 4rem; margin-bottom: 1rem;">âœ…</div>
 
           <h1 style="font-size: 2.5rem; font-weight: bold; color: #10b981; margin-bottom: 0.5rem;">Order Confirmed!</h1>
           <p style="font-size: 1.125rem; color: #666; margin-bottom: 2rem;">Thank you for your purchase</p>
@@ -138,7 +131,7 @@
 
             <div style="margin-bottom: 1.5rem;">
               <p style="font-size: 0.875rem; color: #999; text-transform: uppercase; margin-bottom: 0.25rem;">Order Total</p>
-              <p style="font-size: 1.5rem; font-weight: bold; color: #2563eb;">₱${(order.total * 1.1).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
+              <p style="font-size: 1.5rem; font-weight: bold; color: #2563eb;">â‚±${(order.total * 1.1).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
             </div>
           </div>
 
@@ -161,7 +154,7 @@
                     <p style="font-weight: 500; color: #111;">${item.name}</p>
                     <p style="font-size: 0.875rem; color: #666;">Qty: ${item.quantity}</p>
                   </div>
-                  <p style="font-weight: 600; color: #111;">₱${(item.price * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
+                  <p style="font-weight: 600; color: #111;">â‚±${(item.price * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
                 </div>
               `).join("")}
             </div>

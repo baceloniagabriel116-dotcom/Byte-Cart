@@ -1,6 +1,3 @@
-// Dynamic site customization: footer settings + team members.
-// Backed by Supabase (site_settings + team_members tables) with a
-// localStorage cache so the public pages still render offline.
 class SiteSettingsManager {
   constructor() {
     this.cacheKey = "site-settings-cache";
@@ -16,7 +13,6 @@ class SiteSettingsManager {
     };
   }
 
-  // ---------- Settings ----------
   getCachedSettings() {
     try { return JSON.parse(localStorage.getItem(this.cacheKey)) || null; } catch { return null; }
   }
@@ -32,7 +28,7 @@ class SiteSettingsManager {
     const settings = { ...this.defaults };
     (data || []).forEach(row => {
       if (row.key === "social_links") {
-        try { settings.social_links = JSON.parse(row.value); } catch { /* keep default */ }
+        try { settings.social_links = JSON.parse(row.value); } catch { }
       } else {
         settings[row.key] = row.value;
       }
@@ -42,7 +38,6 @@ class SiteSettingsManager {
   }
 
   async saveSetting(key, value) {
-    // Update local cache immediately so the UI reflects the change instantly.
     const settings = this.getSettings();
     settings[key] = value;
     localStorage.setItem(this.cacheKey, JSON.stringify(settings));
@@ -60,7 +55,6 @@ class SiteSettingsManager {
     return results.every(r => r.success) ? { success: true } : { success: false, error: results.find(r => r.error)?.error };
   }
 
-  // ---------- Team ----------
   getCachedTeam() {
     try { return JSON.parse(localStorage.getItem(this.teamKey)) || []; } catch { return []; }
   }
@@ -97,7 +91,6 @@ class SiteSettingsManager {
     return { success: true };
   }
 
-  // ---------- Rendering ----------
   renderFooter() {
     const copyrightEl = document.getElementById("footerCopyright");
     if (copyrightEl) copyrightEl.textContent = this.getSettings().copyright_text;

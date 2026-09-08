@@ -10,7 +10,6 @@
 </head>
 
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-container">
       <a href="index.html" class="logo"><img src="assets/shopping cart image.png" alt="Byte Cart logo"><span
@@ -56,8 +55,6 @@
       </div>
     </div>
   </nav>
-
-  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
       <h1>Welcome to Byte Cart</h1>
@@ -68,14 +65,10 @@
       </div>
     </div>
   </section>
-
-  <!-- Featured Products -->
   <section class="container">
     <h2 style="font-size: 2rem; font-weight: bold; margin-bottom: 2rem;">Featured Products</h2>
     <div class="grid grid-cols-4" id="featuredProducts"></div>
   </section>
-
-  <!-- Categories Section -->
   <section class="container">
     <h2 style="font-size: 2rem; font-weight: bold; margin-bottom: 2rem;">Shop by Category</h2>
     <div style="display: flex; flex-wrap: nowrap; gap: 1.5rem;">
@@ -105,16 +98,12 @@
       </a>
     </div>
   </section>
-
-  <!-- About / Team Section (admin-manageable) -->
   <section class="container" style="margin-top: 3rem;">
     <h2 style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">About the Team</h2>
     <p style="color: #6b7280; margin-bottom: 2rem;">The people behind Byte Cart.</p>
     <div class="team-grid" id="teamGrid"
       style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.5rem;"></div>
   </section>
-
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -143,8 +132,6 @@
       <p id="footerCopyright">© 2026 ByteCart. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
   <script src="js/database.js"></script>
@@ -178,7 +165,6 @@
         </a>
       `).join("");
 
-      // Render admin-managed footer + team section from Supabase
       siteSettings.renderFooter();
       siteSettings.renderTeam("teamGrid");
     });

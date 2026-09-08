@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="css/transitions.css">
 </head>
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-container">
       <a href="index.html" class="logo"><img src="assets/shopping cart image.png" alt="Byte Cart logo"><span class="logo-byte">Byte</span><span class="logo-cart">Cart</span></a>
@@ -37,11 +36,8 @@
       </div>
     </div>
   </nav>
-
-  <!-- Products Section -->
   <div class="container">
     <div style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem; margin: 2rem 0;">
-      <!-- Sidebar Filters -->
       <aside>
         <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1.5rem;">Filters</h3>
         
@@ -59,9 +55,9 @@
           <h4 style="font-weight: 600; margin-bottom: 1rem;">Price Range</h4>
           <select id="priceFilter" class="filter-select" onchange="filterProducts()">
             <option value="">All Prices</option>
-            <option value="under-5000">Under ₱5,000</option>
-            <option value="5000-15000">₱5,000 - ₱15,000</option>
-            <option value="above-15000">Above ₱15,000</option>
+            <option value="under-5000">Under â‚±5,000</option>
+            <option value="5000-15000">â‚±5,000 - â‚±15,000</option>
+            <option value="above-15000">Above â‚±15,000</option>
           </select>
         </div>
 
@@ -75,8 +71,6 @@
           </select>
         </div>
       </aside>
-
-      <!-- Products Grid -->
       <main>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
           <h1 style="font-size: 2rem; font-weight: bold;">All Products</h1>
@@ -94,8 +88,6 @@
       </main>
     </div>
   </div>
-
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -122,11 +114,9 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2027 ByteCart. All rights reserved.</p>
+      <p>Â© 2027 ByteCart. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
   <script src="js/database.js"></script>
@@ -202,11 +192,11 @@
               <h3 class="product-name">${product.name}</h3>
               <p class="product-description">${product.description}</p>
               <div class="product-rating">
-                <span style="color: #999;">${product.reviews > 0 ? `★ ${product.rating} (${product.reviews})` : "No reviews yet"}</span>
+                <span style="color: #999;">${product.reviews > 0 ? `â˜… ${product.rating} (${product.reviews})` : "No reviews yet"}</span>
               </div>
               <div class="product-price-section">
-                <span class="product-price">₱${product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
-                <span class="product-sales">✓ ${salesManager.getSalesCount(product.id)} bought</span>
+                <span class="product-price">â‚±${product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                <span class="product-sales">âœ“ ${salesManager.getSalesCount(product.id)} bought</span>
                 <button onclick="event.preventDefault(); addProductToCart(${product.id})" class="btn btn-primary">Add</button>
               </div>
             </div>
