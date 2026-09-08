@@ -28,7 +28,29 @@ class AuthManager {
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabaseClient.from("users").select("*");
-        if (!error && data && data.length) return data;
+        if (!error && data && data.length) {
+          // Merge remote users into local storage so login works
+          // even if Supabase later rejects the sign-in (e.g. unconfirmed email)
+          const localUsers = database.read("users");
+          const merged = [...localUsers];
+          for (const remoteUser of data) {
+            if (!merged.some(u => u.email === remoteUser.email)) {
+              merged.push({
+                id: remoteUser.id,
+                email: remoteUser.email,
+                firstName: remoteUser.firstName || "",
+                lastName: remoteUser.lastName || "",
+                role: remoteUser.role || "user",
+                password_hash: remoteUser.password_hash || "",
+                createdAt: remoteUser.createdAt || remoteUser.created_at || new Date().toISOString()
+              });
+            }
+          }
+          if (merged.length > localUsers.length) {
+            database.write("users", merged);
+          }
+          return merged;
+        }
       } catch (e) {
         console.warn("Supabase fetch users failed:", e.message);
       }
@@ -65,9 +87,14 @@ class AuthManager {
           password,
           options: { data: { firstName, lastName } }
         });
+        // Always save to local storage so login works even if Supabase
+        // requires email confirmation or rejects the sign-in later.
+        const users = await this.getAllUsers();
+        if (!users.some(u => u.email === email)) {
+          users.push({ id: database.nextId(users), email, password_hash: btoa(password), firstName, lastName, role: "user", createdAt: new Date().toISOString() });
+          this.saveUsers(users);
+        }
         if (error || !data || !data.user) {
-          // Fall back to local storage so registration still works offline
-          // or when Supabase requires email confirmation / rejects the signup
           return this.registerLocal(email, password, firstName, lastName);
         }
         const user = data.user;
@@ -80,18 +107,12 @@ class AuthManager {
           createdAt: new Date().toISOString()
         };
         await this.syncUserToSupabase(profile);
-        // Also save locally so login still works even if Supabase later
-        // rejects the sign-in (e.g. unconfirmed email)
-        const users = await this.getAllUsers();
-        if (!users.some(u => u.email === email)) {
-          users.push({ id: user.id, email, password_hash: btoa(password), firstName, lastName, role: "user", createdAt: new Date().toISOString() });
-          this.saveUsers(users);
-        }
         this.currentUser = { id: user.id, email, firstName, lastName, role: "user" };
         localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
         return { success: true, user: this.currentUser };
       } catch (e) {
-        return { success: false, error: e.message };
+        console.warn("Supabase register failed, using local:", e.message);
+        return this.registerLocal(email, password, firstName, lastName);
       }
     }
 

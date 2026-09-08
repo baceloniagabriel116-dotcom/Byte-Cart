@@ -150,7 +150,7 @@
         </form>
       </div>
 
-      <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e7eb;">
+      <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e7eb;" class="demo-credentials-block">
         <p style="font-size: 0.875rem; color: #666; margin-bottom: 1rem;">Demo credentials:</p>
         <p style="font-size: 0.875rem; color: #666;">
           Email: <code
@@ -291,7 +291,11 @@
           admin.role = "admin";
           authManager.saveUsers(adminUsers);
           if (isSupabaseConfigured) {
-            supabaseClient.from("users").update({ role: "admin" }).eq("email", "admin@example.com");
+            try {
+              await supabaseClient.from("users").update({ role: "admin" }).eq("email", "admin@example.com");
+            } catch (e) {
+              console.warn("Supabase admin update failed:", e.message);
+            }
           }
         }
         authManager.logout();
