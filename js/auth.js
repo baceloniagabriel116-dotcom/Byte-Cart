@@ -34,17 +34,24 @@ class AuthManager {
           const localUsers = database.read("users");
           const merged = [...localUsers];
           for (const remoteUser of data) {
-            if (!merged.some(u => u.email === remoteUser.email)) {
-              merged.push({
-                id: remoteUser.id,
-                email: remoteUser.email,
-                firstName: remoteUser.firstName || "",
-                lastName: remoteUser.lastName || "",
-                role: remoteUser.role || "user",
-                password_hash: remoteUser.password_hash || "",
-                createdAt: remoteUser.createdAt || remoteUser.created_at || new Date().toISOString()
-              });
+            const localMatch = merged.find(u => u.email === remoteUser.email);
+            if (localMatch) {
+              // The remote copy is synced without a password hash — keep the
+              // local one so the account stays loginable.
+              if (!localMatch.password_hash && remoteUser.password_hash) {
+                localMatch.password_hash = remoteUser.password_hash;
+              }
+              continue;
             }
+            merged.push({
+              id: remoteUser.id,
+              email: remoteUser.email,
+              firstName: remoteUser.firstName || "",
+              lastName: remoteUser.lastName || "",
+              role: remoteUser.role || "user",
+              password_hash: remoteUser.password_hash || "",
+              createdAt: remoteUser.createdAt || remoteUser.created_at || new Date().toISOString()
+            });
           }
           if (merged.length > localUsers.length) {
             database.write("users", merged);
@@ -166,7 +173,24 @@ class AuthManager {
 
   async loginLocal(email, password) {
     const users = await this.getAllUsers();
-    const user = users.find(u => u.email === email && (u.password_hash || u.password) === btoa(password));
+    const encoded = btoa(password);
+    let user = users.find(u => u.email === email && (u.password_hash || u.password) === encoded);
+    if (!user) {
+      // Fallback: the merged list may be missing the password (remote copies
+      // are synced without one). Check the untouched local records instead.
+      const localOnly = database.read("users")
+        .concat(JSON.parse(localStorage.getItem("users") || "[]"))
+        .find(u => u.email === email && (u.password_hash || u.password) === encoded);
+      if (localOnly) {
+        // Restore the password into the stored list so future logins are direct.
+        const stored = users.find(u => u.email === email);
+        if (stored) {
+          stored.password_hash = localOnly.password_hash || localOnly.password;
+          this.saveUsers(users);
+        }
+        user = { ...stored || {}, ...localOnly };
+      }
+    }
     if (!user) return { success: false, error: "Invalid email or password" };
     const { password: _, password_hash: __, ...userWithoutPassword } = user;
     this.currentUser = userWithoutPassword;

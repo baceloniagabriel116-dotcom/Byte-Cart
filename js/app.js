@@ -23,7 +23,7 @@ init() {
           window.dispatchEvent(new CustomEvent("databaseUpdated", { detail: { table: "products" } }));
         });
       };
-      if (authManager isLoggedIn()) {
+      if (authManager.isLoggedIn()) {
         syncThenRefresh();
       }
       cartManager.syncOrdersFromSupabase();
@@ -39,7 +39,7 @@ init() {
       greeting.textContent = `Welcome back, Admin ${authManager.getCurrentUser().firstName || ""}`.trim();
       greeting.className = "hero-content h1 greeting-admin";
       if (subtitle) subtitle.textContent = "Manage your store inventory and sales dashboard";
-    } else if (authManager isLoggedIn()) {
+    } else if (authManager.isLoggedIn()) {
       greeting.textContent = `Welcome back, ${authManager.getCurrentUser().firstName || "User"}`;
       greeting.className = "hero-content h1 greeting-user";
       if (subtitle) subtitle.textContent = "Continue your shopping journey";
