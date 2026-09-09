@@ -79,7 +79,7 @@
           <div class="form-group"><label class="form-label" for="teamRole">Role / Title</label><input id="teamRole" class="form-control" required></div>
           <div class="form-group"><label class="form-label" for="teamBio">Bio / Info</label><textarea id="teamBio" class="form-control" rows="3" required></textarea></div>
           <div class="form-group"><label class="form-label" for="teamImageUrl">Profile Picture URL</label><input id="teamImageUrl" class="form-control" placeholder="https://... or upload below"></div>
-          <div class="form-group"><label class="form-label" for="teamImageFile">â€¦or Upload Picture</label><input id="teamImageFile" class="form-control" type="file" accept="image/*"></div>
+          <div class="form-group"><label class="form-label" for="teamImageFile">…or Upload Picture</label><input id="teamImageFile" class="form-control" type="file" accept="image/*"></div>
           <img id="teamImagePreview" class="team-card-preview" alt="" hidden>
           <div style="margin-top:1rem;"><button class="btn btn-primary" type="submit">Save Member</button> <button class="btn btn-secondary" type="button" onclick="resetTeamForm()">Cancel</button></div>
           <span id="teamSaveStatus" style="margin-left:.5rem; font-size:.85rem; color:#059669;"></span>
@@ -107,7 +107,7 @@
         <a href="#">Shipping Info</a>
       </div>
     </div>
-    <div class="footer-bottom"><p>Â© 2026 ByteCart. All rights reserved.</p></div>
+    <div class="footer-bottom"><p>© 2026 ByteCart. All rights reserved.</p></div>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase.js"></script><script src="js/database.js"></script><script src="data/products.js"></script><script src="js/auth.js"></script><script src="js/cart.js"></script><script src="js/transitions.js" defer></script>
   <script src="js/app.js"></script>
@@ -160,7 +160,7 @@
     }
     async function persistSocialLinks() {
       const result = await siteSettings.saveSetting("social_links", socialLinks);
-      socialStatus(result.success ? "Saved âœ“" : "Error: " + result.error);
+      socialStatus(result.success ? "Saved ✓" : "Error: " + result.error);
     }
     async function updateSocialLink(index, field, value) { socialLinks[index][field] = value.trim(); await persistSocialLinks(); }
     async function removeSocialLink(index) { socialLinks.splice(index, 1); renderSocialRows(); await persistSocialLinks(); }
@@ -179,7 +179,7 @@
       const copyright = document.getElementById("settingCopyright").value.trim();
       const result = await siteSettings.saveSettings({ brand_name: brand, copyright_text: copyright });
       const status = document.getElementById("footerSaveStatus");
-      status.textContent = result.success ? "Saved âœ“" : "Error: " + result.error;
+      status.textContent = result.success ? "Saved ✓" : "Error: " + result.error;
       setTimeout(() => status.textContent = "", 2500);
     });
 
@@ -251,7 +251,7 @@
       const result = await siteSettings.saveTeamMember(member);
       const status = document.getElementById("teamSaveStatus");
       if (!result.success) { status.style.color = "#dc2626"; status.textContent = "Error: " + result.error; return; }
-      status.style.color = "#059669"; status.textContent = "Saved âœ“"; setTimeout(() => status.textContent = "", 2500);
+      status.style.color = "#059669"; status.textContent = "Saved ✓"; setTimeout(() => status.textContent = "", 2500);
       resetTeamForm(); await loadTeamUI();
     });
 
