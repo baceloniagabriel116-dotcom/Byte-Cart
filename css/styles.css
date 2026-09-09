@@ -802,7 +802,7 @@ body {
   }
 
   .user-profile { display: none; }
-  .user-profile.is-open .user-dropdown { display: block; }
+  .user-profile.is-open .user-dropdown { display: block; right: 0; left: auto; }
 
   .nav-center {
     display: none;
@@ -828,9 +828,9 @@ body {
 
 /* ============ User Profile Dropdown ============ */
 .navbar-container > #userMenu {
-  margin-right: auto;
   display: flex;
   align-items: center;
+  order: 2;
 }
 
 .user-profile {
@@ -928,7 +928,7 @@ body {
 .user-dropdown {
   position: absolute;
   top: calc(100% + 0.5rem);
-  left: 0;
+  right: 0;
   width: 12rem;
   background: #fff;
   border: 1px solid #f1f5f9;
