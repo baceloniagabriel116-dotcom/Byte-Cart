@@ -3,13 +3,14 @@ class EcommerceApp {
     this.init();
   }
 
-  init() {
+init() {
     products.forEach(product => {
       product.rating = Number(reviewManager.getProductAverageRating(product.id)) || 0;
       product.reviews = reviewManager.getProductReviews(product.id).length;
     });
     this.setupEventListeners();
     this.updateUI();
+    this.updateHeroGreeting();
     this.setupScrollAnimations();
     if (isSupabaseConfigured) {
       const syncThenRefresh = () => {
@@ -22,15 +23,36 @@ class EcommerceApp {
           window.dispatchEvent(new CustomEvent("databaseUpdated", { detail: { table: "products" } }));
         });
       };
-      if (authManager.isLoggedIn()) {
+      if (authManager isLoggedIn()) {
         syncThenRefresh();
       }
       cartManager.syncOrdersFromSupabase();
     }
   }
 
+  updateHeroGreeting() {
+    const greeting = document.getElementById("heroGreeting");
+    const subtitle = document.getElementById("heroSubtitle");
+    if (!greeting) return;
+
+    if (authManager.isAdmin()) {
+      greeting.textContent = `Welcome back, Admin ${authManager.getCurrentUser().firstName || ""}`.trim();
+      greeting.className = "hero-content h1 greeting-admin";
+      if (subtitle) subtitle.textContent = "Manage your store inventory and sales dashboard";
+    } else if (authManager isLoggedIn()) {
+      greeting.textContent = `Welcome back, ${authManager.getCurrentUser().firstName || "User"}`;
+      greeting.className = "hero-content h1 greeting-user";
+      if (subtitle) subtitle.textContent = "Continue your shopping journey";
+    } else {
+      greeting.textContent = "Welcome to Byte Cart";
+      greeting.className = "hero-content h1";
+      if (subtitle) subtitle.textContent = "Discover premium electronics, wearables, and accessories at unbeatable prices";
+    }
+  }
+
   setupEventListeners() {
     window.addEventListener("cartUpdated", () => this.updateCartUI());
+    window.addEventListener("databaseUpdated", () => this.updateHeroGreeting());
   }
 
   setupScrollAnimations() {
@@ -79,12 +101,13 @@ class EcommerceApp {
     if (authManager.isLoggedIn()) {
       const user = authManager.getCurrentUser();
       if (userMenu) {
-        userMenu.innerHTML = `
+        const welcomeClass = authManager.isAdmin() ? "welcome-admin" : "welcome-user";
+          userMenu.innerHTML = `
           <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-700">Welcome, ${user.firstName}!</span>
-            <a href="account.html" class="text-blue-600 hover:text-blue-800">My Account</a>
-            ${authManager.isAdmin() ? '<a href="admin.html" class="text-blue-600 hover:text-blue-800">Admin</a>' : ''}
-            <button onclick="handleLogout()" class="text-red-600 hover:text-red-800">Logout</button>
+            <span class="text-sm font-medium ${welcomeClass}">Welcome, ${user.firstName}!</span>
+            <a href="account.html" class="text-blue-600 hover:text-blue-800 hover:underline">My Account</a>
+            ${authManager.isAdmin() ? '<a href="admin.html" class="text-blue-600 hover:text-blue-800 hover:underline">Admin</a>' : ''}
+            <button onclick="handleLogout()" class="text-red-600 hover:text-red-800 hover:underline">Logout</button>
           </div>
         `;
       }
