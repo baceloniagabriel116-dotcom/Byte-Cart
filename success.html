@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -131,7 +131,7 @@
 
             <div style="margin-bottom: 1.5rem;">
               <p style="font-size: 0.875rem; color: #999; text-transform: uppercase; margin-bottom: 0.25rem;">Order Total</p>
-              <p style="font-size: 1.5rem; font-weight: bold; color: #2563eb;">â‚±${(order.total * 1.1).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
+              <p style="font-size: 1.5rem; font-weight: bold; color: #2563eb;">₱${(order.total * 1.1).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
             </div>
           </div>
 
@@ -154,7 +154,7 @@
                     <p style="font-weight: 500; color: #111;">${item.name}</p>
                     <p style="font-size: 0.875rem; color: #666;">Qty: ${item.quantity}</p>
                   </div>
-                  <p style="font-weight: 600; color: #111;">â‚±${(item.price * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
+                  <p style="font-weight: 600; color: #111;">₱${(item.price * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
                 </div>
               `).join("")}
             </div>

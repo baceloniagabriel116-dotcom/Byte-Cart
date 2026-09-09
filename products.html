@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -55,9 +55,9 @@
           <h4 style="font-weight: 600; margin-bottom: 1rem;">Price Range</h4>
           <select id="priceFilter" class="filter-select" onchange="filterProducts()">
             <option value="">All Prices</option>
-            <option value="under-5000">Under â‚±5,000</option>
-            <option value="5000-15000">â‚±5,000 - â‚±15,000</option>
-            <option value="above-15000">Above â‚±15,000</option>
+            <option value="under-5000">Under ₱5,000</option>
+            <option value="5000-15000">₱5,000 - ₱15,000</option>
+            <option value="above-15000">Above ₱15,000</option>
           </select>
         </div>
 
@@ -195,7 +195,7 @@
                 <span style="color: #999;">${product.reviews > 0 ? `â˜… ${product.rating} (${product.reviews})` : "No reviews yet"}</span>
               </div>
               <div class="product-price-section">
-                <span class="product-price">â‚±${product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                <span class="product-price">₱${product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
                 <span class="product-sales">âœ“ ${salesManager.getSalesCount(product.id)} bought</span>
                 <button onclick="event.preventDefault(); addProductToCart(${product.id})" class="btn btn-primary">Add</button>
               </div>

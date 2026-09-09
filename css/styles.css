@@ -802,7 +802,7 @@ body {
   }
 
   .user-profile { display: none; }
-  .user-profile.is-open .user-dropdown { display: block; right: 0; left: auto; }
+  .user-profile.is-open .user-dropdown { display: block; left: 0; right: auto; }
 
   .nav-center {
     display: none;
@@ -830,7 +830,8 @@ body {
 .navbar-container > #userMenu {
   display: flex;
   align-items: center;
-  order: 2;
+  order: -1; /* keep the profile pill to the LEFT of the cart icon */
+  margin-right: 0.25rem;
 }
 
 .user-profile {
@@ -928,7 +929,7 @@ body {
 .user-dropdown {
   position: absolute;
   top: calc(100% + 0.5rem);
-  right: 0;
+  left: 0;
   width: 12rem;
   background: #fff;
   border: 1px solid #f1f5f9;

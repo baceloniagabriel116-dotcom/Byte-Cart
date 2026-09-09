@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -128,7 +128,7 @@
                   <span style="color: #999;">${p.reviews > 0 ? `â˜… ${p.rating} (${p.reviews})` : "No reviews yet"}</span>
                 </div>
                 <div class="product-price-section">
-                  <span class="product-price">â‚±${p.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                  <span class="product-price">₱${p.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
                   <span class="product-sales">âœ“ ${salesManager.getSalesCount(p.id)} bought</span>
                 </div>
               </div>

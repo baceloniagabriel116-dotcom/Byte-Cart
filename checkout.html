@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -193,7 +193,7 @@
                     <div style="flex: 1;">
                       <p style="font-weight: 600; color: #111;">${item.name}</p>
                       <p style="font-size: 0.875rem; color: #666;">Qty: ${item.quantity}</p>
-                      <p style="font-weight: 600; color: #2563eb;">â‚±${(item.price * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
+                      <p style="font-weight: 600; color: #2563eb;">₱${(item.price * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
                     </div>
                   </div>
                 `).join("")}
@@ -202,11 +202,11 @@
               <div style="border-top: 2px solid #e5e7eb; padding-top: 1rem;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
                   <span>Subtotal</span>
-                  <span>â‚±${orderTotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                  <span>₱${orderTotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
                   <span>Tax (10%)</span>
-                  <span>â‚±${tax.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                  <span>₱${tax.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
                   <span>Shipping</span>
@@ -214,7 +214,7 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: bold; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
                   <span>Total</span>
-                  <span style="color: #2563eb;">â‚±${grandTotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                  <span style="color: #2563eb;">₱${grandTotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
                 </div>
               </div>
 

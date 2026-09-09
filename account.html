@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -172,7 +172,7 @@
                       <td style="padding: 1rem; font-weight: 600;">${order.orderNumber}</td>
                       <td style="padding: 1rem;">${new Date(order.createdAt).toLocaleDateString()}</td>
                       <td style="padding: 1rem;">${order.items.length} item(s)</td>
-                      <td style="padding: 1rem; font-weight: 600; color: #2563eb;">â‚±${order.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                      <td style="padding: 1rem; font-weight: 600; color: #2563eb;">₱${order.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                       <td style="padding: 1rem;">
                         <span style="background: ${order.status === 'pending' ? '#fef3c7' : order.status === 'shipped' ? '#dbeafe' : '#dcfce7'}; color: ${order.status === 'pending' ? '#92400e' : order.status === 'shipped' ? '#1e40af' : '#166534'}; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">
                           ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
@@ -226,7 +226,7 @@
     function viewOrder(orderId) {
       const order = cartManager.getOrder(orderId);
       if (order) {
-        alert(`Order #${order.orderNumber}\n\nItems: ${order.items.length}\nTotal: â‚±${order.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\nStatus: ${order.status}\n\nDelivery to:\n${order.shippingDetails.recipientName}\n${order.shippingDetails.streetAddress}\n${order.shippingDetails.city}, ${order.shippingDetails.state} ${order.shippingDetails.postalCode}`);
+        alert(`Order #${order.orderNumber}\n\nItems: ${order.items.length}\nTotal: ₱${order.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\nStatus: ${order.status}\n\nDelivery to:\n${order.shippingDetails.recipientName}\n${order.shippingDetails.streetAddress}\n${order.shippingDetails.city}, ${order.shippingDetails.state} ${order.shippingDetails.postalCode}`);
       }
     }
 
