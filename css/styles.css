@@ -827,6 +827,12 @@ body {
 }
 
 /* ============ User Profile Dropdown ============ */
+.navbar-container > #userMenu {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+}
+
 .user-profile {
   position: relative;
   display: flex;
@@ -922,7 +928,7 @@ body {
 .user-dropdown {
   position: absolute;
   top: calc(100% + 0.5rem);
-  right: 0;
+  left: 0;
   width: 12rem;
   background: #fff;
   border: 1px solid #f1f5f9;

@@ -162,6 +162,13 @@ init() {
           };
           document.addEventListener("click", this._outsideClickHandler);
         }
+
+        // Place the profile pill on the left side of the navbar,
+        // right after the shopping cart logo.
+        const logo = document.querySelector(".navbar-container > .logo");
+        if (logo && logo.nextElementSibling !== userMenu) {
+          logo.insertAdjacentElement("afterend", userMenu);
+        }
       }
       if (authButtons) authButtons.style.display = "none";
     } else {
