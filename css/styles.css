@@ -977,16 +977,27 @@ body {
   border-radius: 0.5rem;
   cursor: pointer;
   text-align: left;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, text-decoration-color 0.15s ease, padding-left 0.15s ease;
   font-family: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
 }
 .user-dropdown-item svg {
   flex-shrink: 0;
   color: #64748b;
+  transition: color 0.15s ease, transform 0.15s ease;
 }
 .user-dropdown-item:hover {
-  background: #f8fafc;
-  color: #0f172a;
+  background: #eff6ff;
+  color: #1d4ed8;
+  text-decoration-color: #2563eb;
+  padding-left: 0.9rem;
+}
+.user-dropdown-item:hover svg {
+  color: #2563eb;
+  transform: scale(1.1);
 }
 .user-dropdown-item.danger {
   color: #dc2626;
@@ -996,4 +1007,6 @@ body {
 }
 .user-dropdown-item.danger:hover {
   background: #fef2f2;
+  text-decoration-color: #dc2626;
+  padding-left: 0.9rem;
 }
