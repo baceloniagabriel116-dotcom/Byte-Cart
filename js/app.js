@@ -101,15 +101,67 @@ init() {
     if (authManager.isLoggedIn()) {
       const user = authManager.getCurrentUser();
       if (userMenu) {
-        const welcomeClass = authManager.isAdmin() ? "welcome-admin" : "welcome-user";
-          userMenu.innerHTML = `
-          <div class="flex items-center gap-4">
-            <span class="text-sm font-medium ${welcomeClass}">Welcome, ${user.firstName}!</span>
-            <a href="account.html" class="text-blue-600 hover:text-blue-800 hover:underline">My Account</a>
-            ${authManager.isAdmin() ? '<a href="admin.html" class="text-blue-600 hover:text-blue-800 hover:underline">Admin</a>' : ''}
-            <button onclick="handleLogout()" class="text-red-600 hover:text-red-800 hover:underline">Logout</button>
+        const isAdmin = authManager.isAdmin();
+        const initials = ((user.firstName || user.email || "U")[0] + (user.lastName ? user.lastName[0] : "")).toUpperCase();
+        const roleLabel = isAdmin ? "Admin" : "User";
+        userMenu.innerHTML = `
+          <div class="user-profile${isAdmin ? " avatar-admin" : ""}" id="userProfile" tabindex="0" role="button" aria-haspopup="menu" aria-expanded="false">
+            <div class="user-avatar${isAdmin ? " avatar-admin" : ""}">
+              ${initials}
+              <span class="avatar-status" title="Online"></span>
+            </div>
+            <div class="user-label">
+              <span class="user-name">${user.firstName || "User"}</span>
+              <span class="user-role${isAdmin ? " role-admin" : ""}">${roleLabel}</span>
+            </div>
+            <svg class="user-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <div class="user-dropdown" role="menu">
+              <div class="user-dropdown-header">
+                <div class="dd-name">${user.firstName || ""} ${user.lastName || ""}</div>
+                <div class="dd-email">${user.email || ""}</div>
+              </div>
+              <a href="account.html" class="user-dropdown-item" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                My Account
+              </a>
+              ${isAdmin ? `
+              <a href="admin.html" class="user-dropdown-item" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                Admin Dashboard
+              </a>` : ""}
+              <button type="button" class="user-dropdown-item danger" role="menuitem" onclick="handleLogout()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+              </button>
+            </div>
           </div>
         `;
+
+        const profile = document.getElementById("userProfile");
+        profile.addEventListener("click", event => {
+          const dropdown = event.target.closest("a, button");
+          if (dropdown) return;
+          const open = profile.classList.toggle("is-open");
+          profile.setAttribute("aria-expanded", open);
+        });
+        profile.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            const open = profile.classList.toggle("is-open");
+            profile.setAttribute("aria-expanded", open);
+          }
+        });
+        if (!this._outsideClickHandler) {
+          this._outsideClickHandler = event => {
+            document.querySelectorAll(".user-profile.is-open").forEach(menu => {
+              if (!menu.contains(event.target)) {
+                menu.classList.remove("is-open");
+                menu.setAttribute("aria-expanded", "false");
+              }
+            });
+          };
+          document.addEventListener("click", this._outsideClickHandler);
+        }
       }
       if (authButtons) authButtons.style.display = "none";
     } else {
